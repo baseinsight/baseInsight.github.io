@@ -1,0 +1,13 @@
+= 关于baseInsight
+author: 肖鹏 <13910818313@163.com>
+2023-06-07
+
+:source-highlighter: highlight.js
+:imagesdir: images
+:sourcedir: ../../main/java
+:build-gradle: ../../../build.gradle
+
+系统定位是快速开发的起步框架,目标是希望减少开发人员在框架层付出，精力聚焦于业务逻辑的实现。采用轻量化、组件式的设计模式来引导终端开发人员应对多变的WEB应用系统的开发。
+
+为避免重复发明轮子，以集成成型的优质的开源框架为主要模式，采用微内核、多插件的形式，提供对业务场景的支持。
+系统由内核core系统包和多个springboot-start构成一个完备的项目示例工程，辅以完备的在线文档（markdown或adoc）来指引开发人员。

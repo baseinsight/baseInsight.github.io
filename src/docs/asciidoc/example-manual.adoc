@@ -1,0 +1,79 @@
+= Example Manual
+Doc Writer <doc.writer@example.org>
+2014-09-09
+:example-caption!:
+:source-highlighter: highlight.js
+:imagesdir: images
+:sourcedir: ../../main/java
+:build-gradle: ../../../build.gradle
+
+This is a user manual for an example project.
+
+== Introduction简单介绍
+
+示例This project does something.
+We just haven't decided what that is yet.
+
+== Source Code
+
+[source,java]
+.Java code from project
+----
+include::{sourcedir}/example/StringUtils.java[tags=contains,indent=0]
+----
+
+This page was built by the following command:
+
+ $ ./gradlew asciidoctor
+
+== Images
+
+[.thumb]
+image::sunset.jpg[scaledwidth=75%]
+
+== Attributes
+
+.Built-in
+asciidoctor-version:: {asciidoctor-version}
+safe-mode-name:: {safe-mode-name}
+docdir:: {docdir}
+docfile:: {docfile}
+imagesdir:: {imagesdir}
+
+.Custom
+project-version:: {revnumber}
+sourcedir:: {sourcedir}
+endpoint-url:: {endpoint-url}
+
+== Includes
+
+.include::subdir/_b.adoc[]
+====
+include::subdir/_b.adoc[]
+====
+
+WARNING: Includes can be tricky!
+
+== build.gradle
+
+[source,groovy]
+----
+include::{build-gradle}[]
+----
+
+
+== 建议
+
+建议采用如下的技术平台构建项目
+
+[format="csv", options="header"]
+|===
+分类,推荐,说明
+开发工具,idea intellij,
+构建工具,gradle,
+代码管理,git,
+开发语言,java,
+制品类型,docker,
+CI/CD,jenkins,
+配置文件类型,*.yml,
+|===
