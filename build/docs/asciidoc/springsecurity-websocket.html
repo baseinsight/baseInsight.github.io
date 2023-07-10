@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
-<meta name="author" content="author: 肖鹏 &lt;13910818313@163.com&gt;">
-<title>关于baseInsight</title>
+<meta name="author" content="作者：肖鹏 &lt;13910818313@163.com&gt;">
+<title>websocket插件</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -441,85 +441,92 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>关于baseInsight</h1>
+<h1>websocket插件</h1>
 <div class="details">
-<span id="author" class="author">author: 肖鹏 &lt;13910818313@163.com&gt;</span><br>
-<span id="revnumber">version 1.0.0-SNAPSHOT,</span>
-<span id="revdate">2023-06-07</span>
+<span id="author" class="author">作者：肖鹏 &lt;13910818313@163.com&gt;</span><br>
+<span id="revnumber">version 1.0.0-SNAPSHOT</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#基本组件">基本组件</a></li>
+<li><a href="#介绍">介绍</a></li>
+<li><a href="#版本历史">版本历史</a></li>
+<li><a href="#使用">使用</a>
+<ul class="sectlevel2">
+<li><a href="#使用gradle-插件">使用gradle 插件</a></li>
+<li><a href="#配置">配置</a></li>
+</ul>
+</li>
+<li><a href="#样例">样例</a>
+<ul class="sectlevel2">
+<li><a href="#点击connet-按钮-连接websocket">点击connet 按钮 连接websocket</a></li>
+<li><a href="#发送topic-信息">发送topic 信息</a></li>
+<li><a href="#发送queue-mesage">发送queue mesage</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div id="preamble">
+<div class="sect1">
+<h2 id="介绍">介绍</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>系统定位是快速开发的起步框架,目标是希望减少开发人员在框架层付出，精力聚焦于业务逻辑的实现。采用轻量化、组件式的设计模式来引导终端开发人员应对多变的WEB应用系统的开发。</p>
+<p>介绍如何使用websocket的插件</p>
 </div>
 <div class="paragraph">
-<p>为避免重复发明轮子，以集成成型的优质的开源框架为主要模式，采用微内核、多插件的形式，提供对业务场景的支持。
-系统由内核core系统包和多个springboot-start构成一个完备的项目示例工程，辅以完备的在线文档（markdown或adoc）来指引开发人员。</p>
+<p>得益于spring secueity和spring websocket的优化集成，插件通过一些简单的代码就可以将websocket功能并入项目中。</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">分类</th>
-<th class="tableblock halign-left valign-top">推荐</th>
-<th class="tableblock halign-left valign-top">说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">开发工具</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">idea intellij</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">构建工具</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">gradle</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">代码管理</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">git</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">开发语言</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">制品类型</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">docker</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CI/CD</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">jenkins</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">配置文件类型</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">*.yml</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-</tbody>
-</table>
 </div>
 </div>
 <div class="sect1">
-<h2 id="基本组件">基本组件</h2>
+<h2 id="版本历史">版本历史</h2>
 <div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>0.0.7-SNAPSHOT</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="使用">使用</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="使用gradle-插件">使用gradle 插件</h3>
+<div class="sect3">
+<h4 id="添加插件">添加插件</h4>
+<div class="paragraph">
+<p>gradle中</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">    implementation('io.github.baseinsight:plugin-springsecurity-websocket-starter:x.x.x-SNAPSHOT')</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="配置">配置</h3>
+<div class="paragraph">
+<p>在application.yml文件中加入如下的配置，注意base顶级项的合并</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-yml" data-lang="yml">base:
+    websocket:
+      userDestinationPrefix: /user/      #用户的队列前缀
+      stompEndpoint: /springWebsocket    #stomp的服务点名称
+      allowedOrigins: '*'                #运行js跨域访问ws
+      topicBroker: /topic                #topic的broker名称
+      queueBroker: /queue                #队列的broker名称</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>具体配置描述</p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -528,66 +535,237 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">名称</th>
-<th class="tableblock halign-left valign-top">介绍</th>
-<th class="tableblock halign-left valign-top">说明</th>
+<th class="tableblock halign-left valign-top">name</th>
+<th class="tableblock halign-left valign-top">描述</th>
+<th class="tableblock halign-left valign-top">使用情况</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">核心组件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="core.html">core-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">springWebsocket</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">stomp的服务点名称</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">页面中通过项目的contextPath+springWebsocket构建socket连接 如 new SockJS(ctx+'/springWebsocket')</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全组件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity.html">plugin-springsecurity-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">userDestinationPrefix</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">用户的队列前缀</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">访问spring security用户自己的队列时增加的前缀 如  stompClient.subscribe('/user/queue/message' function (greeting) {。。。}</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">缓存组件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="cache.html">plugin-cache-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">topicBroker</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">topic的broker名称</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">如 stompClient.subscribe('/topic/info'  function (serverInfo) {。。。}</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">redis组件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="redis.html">plugin-redis-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全rest插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-rest.html">plugin-springsecurity-rest-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全rest-db插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-rest-db.html">plugin-springsecurity-rest-db-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全rest-redis插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-rest-redis.html">plugin-springsecurity-rest-redis-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全camunda插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-camunda.html">plugin-springsecurity-camunda-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全websocket插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-websocket.html">plugin-springsecurity-websocket-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">queueBroker</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">队列的broker名称</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">如  stompClient.subscribe('/user/queue/message'  function (greeting) {。。。}</p></td>
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="样例">样例</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>创建controller,WebsocketController类 ,内容如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">@Controller
+class WebsocketController {
+    @Autowired
+    SpringSecurityService SpringSecurityService
+    @Autowired
+    SimpMessagingTemplate brokerMessagingTemplate
+
+    @RequestMapping(value = "/websocket/index")
+    public String index(Model model){
+        BaseUser currentUser=SpringSecurityService.currentUser;
+        model.addAttribute("baseUsers", BaseUser.findAllByEnabledAndUsernameNotEqual(true,currentUser.username,['order':'asc','sort':'username']));
+        return "/websocket/index"
+    }
+
+    //公布信息（topic）
+    @MessageMapping("/info")
+    public void info(String message, Principal principal)  {
+        brokerMessagingTemplate.convertAndSend("/topic/info","${principal.name}:${message}".toString());
+    }
+    //发送消息（queue）
+    @MessageMapping("/message")
+    public void message(String message, Principal principal)  {
+        JSONObject jsonObject=new JSONObject(message);
+        String receiver =jsonObject.getString("receiver");
+        message =jsonObject.getString("message");
+        brokerMessagingTemplate.convertAndSendToUser(receiver,"/queue/message","${principal.name}:${message}".toString());
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>创建页面，创建Websocket目录，增加index.jsp (老版本的页面，请自行修改为themleaf3的html页面),内容如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">&lt;%@ page contentType="text/html;charset=UTF-8" language="java" %&gt;
+&lt;%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %&gt;
+&lt;%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %&gt;
+&lt;%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html &gt;
+&lt;head&gt;
+    &lt;title&gt;websocket demo&lt;/title&gt;
+    &lt;meta name="layout" content="main"&gt;
+    &lt;link href="${pageContext.request.contextPath}/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet"&gt;
+    &lt;script src="${pageContext.request.contextPath}/webjars/jquery/jquery.min.js"&gt;&lt;/script&gt;
+    &lt;script src="${pageContext.request.contextPath}/webjars/sockjs-client/sockjs.min.js"&gt;&lt;/script&gt;
+    &lt;script src="${pageContext.request.contextPath}/webjars/stomp-websocket/stomp.min.js"&gt;&lt;/script&gt;
+    &lt;script&gt;
+        var stompClient = null;
+        function setConnected(connected) {
+            $("#connect").prop("disabled", connected);
+            $("#disconnect").prop("disabled", !connected);
+            if (connected) {
+                $("#conversation").show();
+            }else {
+                $("#conversation").hide();
+            }
+            $("#topicTable").html("");
+            $("#queueTable").html("");
+        }
+        function connect() {
+            var socket = new SockJS(ctx+'/springWebsocket');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function (frame) {
+                setConnected(true);
+                //订阅主题
+                stompClient.subscribe('/topic/info', function (serverInfo) {
+                    showTopic(serverInfo.body);
+                });
+                //订阅自己的用户消息
+                stompClient.subscribe('/user/queue/message', function (serverInfo) {
+                    showQueue(serverInfo.body);
+                });
+            });
+        }
+        function disconnect() {
+            if (stompClient !== null) {
+                stompClient.disconnect();
+            }
+            setConnected(false);
+        }
+
+        function sendInfo() {
+            //第一个参数发送的地址，第二个参数是头信息，第三个参数是消息体
+            stompClient.send("/project/info", {},  $("#info").val());
+        }
+        function sendMessage() {
+            stompClient.send("/project/message", {}, JSON.stringify({receiver:$('#receiver').val(),message:$("#message").val()}));
+        }
+
+        function showTopic(message) {
+            $("#topicTable").append($("&lt;tr&gt;&lt;td&gt;" + message + "&lt;/td&gt;&lt;/tr&gt;"));
+        }
+        function showQueue(message) {
+            $("#queueTable").append($("&lt;tr&gt;&lt;td&gt;" + message + "&lt;/td&gt;&lt;/tr&gt;"));
+        }
+
+    &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id="main-content" class="container"&gt;
+    &lt;div class="row"&gt;
+        &lt;div class="col-md-3"&gt;
+                &lt;div class="form-group"&gt;
+                    &lt;label for="connect"&gt;WebSocket connection:&lt;/label&gt;
+                    &lt;button id="connect" class="btn btn-default" onclick="connect()" type="button"&gt;Connect&lt;/button&gt;
+                    &lt;button id="disconnect" class="btn btn-default" onclick="disconnect()" type="button" disabled="disabled"&gt;Disconnect
+                    &lt;/button&gt;
+                &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="col-md-3"&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label for="info"&gt;&lt;/label&gt;
+                &lt;input type="text" id="info" class="form-control" placeholder="topic info"&gt;
+            &lt;/div&gt;
+            &lt;button class="btn btn-default" onclick="sendInfo()" type="button"&gt;Send to Topic&lt;/button&gt;
+        &lt;/div&gt;
+        &lt;div class="col-md-3"&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label for="receiver"&gt;To&lt;/label&gt;
+                &lt;select  class="form-control selectpicker"  id="receiver" data-placeholder="select：" &gt;
+                    &lt;c:forEach items="${baseUsers}" var="user" varStatus="status"&gt;
+                        &lt;option value="${user.username}"&gt;${user.username}&lt;/option&gt;
+                    &lt;/c:forEach&gt;
+                &lt;/select&gt;
+                &lt;label for="message"&gt;&lt;/label&gt;
+                &lt;input type="text" id="message" class="form-control" placeholder=""&gt;
+            &lt;/div&gt;
+            &lt;button  class="btn btn-default" onclick="sendMessage()" type="button"&gt;Send to Queue&lt;/button&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div id="conversation" class="row"&gt;
+        &lt;div class="col-md-6"&gt;
+            &lt;table  class="table table-striped"&gt;
+                &lt;thead&gt;
+                &lt;tr&gt;
+                    &lt;th&gt;topic&lt;/th&gt;
+                &lt;/tr&gt;
+                &lt;/thead&gt;
+                &lt;tbody id="topicTable"&gt;
+
+                &lt;/tbody&gt;
+            &lt;/table&gt;
+        &lt;/div&gt;
+        &lt;div class="col-md-6"&gt;
+            &lt;table  class="table table-striped"&gt;
+                &lt;thead&gt;
+                &lt;tr&gt;
+                    &lt;th&gt;queue&lt;/th&gt;
+                &lt;/tr&gt;
+                &lt;/thead&gt;
+                &lt;tbody id="queueTable"&gt;
+
+                &lt;/tbody&gt;
+            &lt;/table&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>访问系统路径/websocket/index，可看到如下界面</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/websocket.png" alt="websocket"></span></p>
+</div>
+<div class="sect2">
+<h3 id="点击connet-按钮-连接websocket">点击connet 按钮 连接websocket</h3>
+
+</div>
+<div class="sect2">
+<h3 id="发送topic-信息">发送topic 信息</h3>
+<div class="paragraph">
+<p>输入topic info信息，点击send to topic 按钮</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="发送queue-mesage">发送queue mesage</h3>
+<div class="paragraph">
+<p>选择接收用户，输入mesage信息，点击send to queue 按钮</p>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0-SNAPSHOT<br>
-Last updated 2023-07-09 23:07:45 +0800
+Last updated 2023-07-10 22:04:56 +0800
 </div>
 </div>
 </body>

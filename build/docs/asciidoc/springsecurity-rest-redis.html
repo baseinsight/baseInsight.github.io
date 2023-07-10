@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
-<meta name="author" content="author: 肖鹏 &lt;13910818313@163.com&gt;">
-<title>关于baseInsight</title>
+<meta name="author" content="作者：肖鹏 &lt;13910818313@163.com&gt;">
+<title>Spring Security REST REDIS 插件</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -441,153 +441,153 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>关于baseInsight</h1>
+<h1>Spring Security REST REDIS 插件</h1>
 <div class="details">
-<span id="author" class="author">author: 肖鹏 &lt;13910818313@163.com&gt;</span><br>
-<span id="revnumber">version 1.0.0-SNAPSHOT,</span>
-<span id="revdate">2023-06-07</span>
+<span id="author" class="author">作者：肖鹏 &lt;13910818313@163.com&gt;</span><br>
+<span id="revnumber">version 1.0.0-SNAPSHOT</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#基本组件">基本组件</a></li>
+<li><a href="#介绍">介绍</a></li>
+<li><a href="#版本历史">版本历史</a></li>
+<li><a href="#使用">使用</a>
+<ul class="sectlevel2">
+<li><a href="#使用gradle-插件">使用gradle 插件</a></li>
+<li><a href="#修改yml配置">修改yml配置</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div id="preamble">
+<div class="sect1">
+<h2 id="介绍">介绍</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>系统定位是快速开发的起步框架,目标是希望减少开发人员在框架层付出，精力聚焦于业务逻辑的实现。采用轻量化、组件式的设计模式来引导终端开发人员应对多变的WEB应用系统的开发。</p>
+<p>扩展的spring security rest 功能, 提供将token 存储进REDIS,同时提供了logout功能。
+默认启用SecureRandomTokenGenerator生成token,不支持refresh_token操作.</p>
 </div>
-<div class="paragraph">
-<p>为避免重复发明轮子，以集成成型的优质的开源框架为主要模式，采用微内核、多插件的形式，提供对业务场景的支持。
-系统由内核core系统包和多个springboot-start构成一个完备的项目示例工程，辅以完备的在线文档（markdown或adoc）来指引开发人员。</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">分类</th>
-<th class="tableblock halign-left valign-top">推荐</th>
-<th class="tableblock halign-left valign-top">说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">开发工具</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">idea intellij</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">构建工具</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">gradle</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">代码管理</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">git</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">开发语言</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">制品类型</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">docker</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CI/CD</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">jenkins</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">配置文件类型</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">*.yml</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-</tbody>
-</table>
 </div>
 </div>
 <div class="sect1">
-<h2 id="基本组件">基本组件</h2>
+<h2 id="版本历史">版本历史</h2>
 <div class="sectionbody">
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
+<div class="ulist">
+<ul>
+<li>
+<p>0.0.7-SNAPSHOT</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="使用">使用</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="使用gradle-插件">使用gradle 插件</h3>
+<div class="sect3">
+<h4 id="添加插件">添加插件</h4>
+<div class="paragraph">
+<p>gradle中</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">    implementation('io.github.baseinsight:plugin-springsecurity-rest-redis-starter:x.x.x-SNAPSHOT')</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="修改yml配置">修改yml配置</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-yml" data-lang="yml">base:
+    springsecurity:
+      rest:
+        active: true
+        login:
+          active: true
+          endpointUrl: /api/login
+          usernamePropertyName: username
+          passwordPropertyName: password
+          failureStatusCode: 401  # HttpServletResponse.SC_UNAUTHORIZED
+          useJsonCredentials: true
+          useRequestParamsCredentials: false
+        logout:
+          endpointUrl: /api/logout
+        token:
+          generation:
+            useSecureRandom: true
+            useUUID: false
+            jwt:
+              issuer: Spring Security REST Plugin
+              algorithm: HS256
+              jweAlgorithm: RSA-OAEP
+              encryptionMethod: A128GCM
+          storage:
+            useJwt: false                        <i class="conum" data-value="1"></i><b>(1)</b>
+            useDb: false                  <i class="conum" data-value="2"></i><b>(2)</b>
+            useRedis:true             <i class="conum" data-value="3"></i><b>(3)</b>
+            expiration: 3600           <i class="conum" data-value="4"></i><b>(4)</b>
+            jwt:
+              useSignedJwt: false              <i class="conum" data-value="5"></i><b>(5)</b>
+              useEncryptedJwt: false           <i class="conum" data-value="6"></i><b>(6)</b>
+              privateKeyPath: /home/.priavte/
+              publicKeyPath: /home/.public
+              secret: atlease256bits(The secret length must be at least 256 bits)
+              expiration: 3600</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
 <tr>
-<th class="tableblock halign-left valign-top">名称</th>
-<th class="tableblock halign-left valign-top">介绍</th>
-<th class="tableblock halign-left valign-top">说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">核心组件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="core.html">core-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>关闭jwt</td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全组件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity.html">plugin-springsecurity-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>关闭数据库存储</td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">缓存组件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="cache.html">plugin-cache-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>启用redis存储</td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">redis组件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="redis.html">plugin-redis-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>设置key的过期时间</td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全rest插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-rest.html">plugin-springsecurity-rest-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>关闭jwt签名</td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全rest-db插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-rest-db.html">plugin-springsecurity-rest-db-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>关闭jwt加密</td>
 </tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全rest-redis插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-rest-redis.html">plugin-springsecurity-rest-redis-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全camunda插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-camunda.html">plugin-springsecurity-camunda-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全websocket插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-websocket.html">plugin-springsecurity-websocket-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-</tbody>
 </table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+可在yml中只添加如上8行数据，其他的若不修改默认值可不添加至yml文件中
+</td>
+</tr>
+</table>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0-SNAPSHOT<br>
-Last updated 2023-07-09 23:07:45 +0800
+Last updated 2023-07-10 21:54:48 +0800
 </div>
 </div>
 </body>

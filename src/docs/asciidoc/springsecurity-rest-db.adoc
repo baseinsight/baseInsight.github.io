@@ -1,0 +1,214 @@
+= Spring Security REST DB 插件
+作者：肖鹏 <13910818313@163.com>
+
+:source-highlighter: highlight.js
+:imagesdir: images
+:sourcedir: ../../main/java
+:build-gradle: ../../../build.gradle
+
+[[介绍]]
+== 介绍
+扩展的spring security rest 功能, 提供将token 存储进数据库表的功能,同时提供了logout功能。
+默认启用SecureRandomTokenGenerator生成token,不支持refresh_token操作.
+
+[[版本历史]]
+
+== 版本历史
+
+*  0.0.8-SNAPSHOT
+
+[[使用]]
+== 使用
+
+=== 使用gradle 插件
+
+==== 添加插件
+gradle中
+[source,groovy]
+----
+    implementation('io.github.baseinsight:plugin-springsecurity-rest-db-starter:x.x.x-SNAPSHOT')
+----
+
+
+[[描述]]
+== 使用描述
+
+=== /api/login返回json样式
+[source,json]
+----
+{
+    "username": "admin",
+    "roles": [
+        "ROLE_ADMIN",
+        "ROLE_EDITOR"
+    ],
+    "token_type": "Bearer",
+    "access_token": "7kk8q7pgs3ca3d7sf6ifmab54ciap2kk"
+}
+----
+
+=== 修改yml配置
+
+[source,yml]
+----
+base:
+    springsecurity:
+      rest:
+        active: true
+        login:
+          active: true
+          endpointUrl: /api/login
+          usernamePropertyName: username
+          passwordPropertyName: password
+          failureStatusCode: 401  # HttpServletResponse.SC_UNAUTHORIZED
+          useJsonCredentials: true
+          useRequestParamsCredentials: false
+        logout:
+          endpointUrl: /api/logout
+        token:
+          generation:
+            useSecureRandom: true
+            useUUID: false
+            jwt:
+              issuer: Spring Security REST Plugin
+              algorithm: HS256
+              jweAlgorithm: RSA-OAEP
+              encryptionMethod: A128GCM
+          storage:
+            useJwt: false                                                                   <1>
+            useDb: true                                                                   <2>
+            db:
+              tokenDomainClassName: AuthenticationToken                                    <3>
+              tokenValuePropertyName: tokenValue                                            <4>
+              usernamePropertyName: username                                                <5>
+              autoAccessCount: true                                                         <6>
+            jwt:
+              useSignedJwt: false                                                           <7>
+              useEncryptedJwt: false                                                        <8>
+              privateKeyPath: /home/.priavte/
+              publicKeyPath: /home/.public
+              secret: atlease256bits(The secret length must be at least 256 bits)
+              expiration: 3600
+          validation:
+            active: true
+            headerName: X-Auth-Token
+            endpointUrl:  /api/validate
+            tokenHeaderMissingStatusCode: 401   #HttpServletResponse.SC_UNAUTHORIZED
+            enableAnonymousAccess: false
+            useBearerToken: true
+          rendering:
+            usernamePropertyName: username
+            tokenPropertyName: access_token
+            authoritiesPropertyName:  roles
+----
+<1> 关闭jwt
+<2> 启用数据库存储
+<3> 数据库的entity类,与下一章节的entity类名称相同
+<4> 存储tokenValue的字段名称
+<5> 存储username的字段名称
+<6> 是否启动domain类的accessCount字段自动计数
+<7> 关闭jwt签名
+<8> 关闭jwt加密
+
+TIP: 可在yml中只添加如上8行数据，其他的若不修改默认值可不添加至yml文件中
+
+=== 增加domain类
+
+增加entity类存储token,如下:
+AuthenticationToken
+
+[source,java]
+----
+@Comment("认证token表")
+@DynamicUpdate
+@Table(name = "authentication_token")
+@Entity
+public class AuthenticationToken {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", nullable = false)
+    private Long id;
+    @NotNull(message = "tokenValue不允许为空")
+    @Comment("tokenValue")
+    @Column(name = "token_value",nullable = false)
+    String tokenValue;
+    @NotNull(message = "用户名称不允许为空")
+    @Comment("用户名称")
+    @Column(name = "username",nullable = false)
+    String username;
+    @Comment("交互次数")
+    @Column(name = "access_count",nullable = false)
+    Integer accessCount=0;
+    @Embedded
+    private AuditingData auditingData = new AuditingData();
+
+    public AuditingData getAuditingData() {
+        return auditingData;
+    }
+
+    public void setAuditingData(AuditingData auditingData) {
+        this.auditingData = auditingData;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTokenValue() {
+        return tokenValue;
+    }
+
+    public void setTokenValue(String tokenValue) {
+        this.tokenValue = tokenValue;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public Integer getAccessCount() {
+        return accessCount;
+    }
+
+    public void setAccessCount(Integer accessCount) {
+        this.accessCount = accessCount;
+    }
+}
+
+----
+
+=== 增加定时任务
+
+添加定时任务清除过期token, 在job目录增加RemoveStaleTokensTask类
+
+[source,java]
+----
+
+@Component
+@Configurable
+@EnableScheduling
+public class RemoveStaleTokensTask {
+    @Scheduled(cron = "0 0 */1 * * *")
+    public void execute(){
+        // 定时清除1天前的token数据
+    }
+}
+----
+
+=== token的注销/api/logout
+
+此模式下支持注销操作, 访问/api/logout时带上 Bearer:${token},就能实现清除操作.
+
+TIP: 注意此操作只支持post方法,不支持get方法
+
+===  不支持refreshToken操作
+
+此模式下不支持refreshToken操作

@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
-<meta name="author" content="author: 肖鹏 &lt;13910818313@163.com&gt;">
-<title>关于baseInsight</title>
+<meta name="author" content="作者：肖鹏 &lt;13910818313@163.com&gt;">
+<title>Core 核心组件</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -441,153 +441,349 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>关于baseInsight</h1>
+<h1>Core 核心组件</h1>
 <div class="details">
-<span id="author" class="author">author: 肖鹏 &lt;13910818313@163.com&gt;</span><br>
-<span id="revnumber">version 1.0.0-SNAPSHOT,</span>
-<span id="revdate">2023-06-07</span>
+<span id="author" class="author">作者：肖鹏 &lt;13910818313@163.com&gt;</span><br>
+<span id="revnumber">version 1.0.0-SNAPSHOT</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#基本组件">基本组件</a></li>
+<li><a href="#介绍">介绍</a></li>
+<li><a href="#使用">使用</a></li>
+<li><a href="#描述">功能描述</a>
+<ul class="sectlevel2">
+<li><a href="#统一的错误处理">统一的错误处理</a></li>
+<li><a href="#entity-类的json-输出">entity 类的json 输出</a></li>
+</ul>
+</li>
+<li><a href="#提供辅助类">提供辅助类</a>
+<ul class="sectlevel2">
+<li><a href="#annotation-注解">annotation 注解</a></li>
+<li><a href="#辅助服务类">辅助服务类</a></li>
+</ul>
+</li>
+<li><a href="#系统部署">系统部署</a>
+<ul class="sectlevel2">
+<li><a href="#默认支持spring-boot的标准模式部署-因此只需要打包运行即可">默认支持spring boot的标准模式部署， 因此只需要打包运行即可。</a></li>
+</ul>
+</li>
+<li><a href="#linux环境及docker的urandom问题">linux环境及docker的urandom问题</a></li>
+<li><a href="#事件机制">事件机制</a>
+<ul class="sectlevel2">
+<li><a href="#订阅事件">订阅事件</a></li>
+<li><a href="#发布事件">发布事件</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div id="preamble">
+<div class="sect1">
+<h2 id="介绍">介绍</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>系统定位是快速开发的起步框架,目标是希望减少开发人员在框架层付出，精力聚焦于业务逻辑的实现。采用轻量化、组件式的设计模式来引导终端开发人员应对多变的WEB应用系统的开发。</p>
+<p>是基础组件,提供框架层的底层支持、项目框架的基础功能、 系统错误整体处理器等功能</p>
 </div>
-<div class="paragraph">
-<p>为避免重复发明轮子，以集成成型的优质的开源框架为主要模式，采用微内核、多插件的形式，提供对业务场景的支持。
-系统由内核core系统包和多个springboot-start构成一个完备的项目示例工程，辅以完备的在线文档（markdown或adoc）来指引开发人员。</p>
+<div id="版本" class="ulist">
+<ul>
+<li>
+<p>0.0.6-SNAPSHOT</p>
+</li>
+</ul>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">分类</th>
-<th class="tableblock halign-left valign-top">推荐</th>
-<th class="tableblock halign-left valign-top">说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">开发工具</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">idea intellij</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">构建工具</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">gradle</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">代码管理</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">git</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">开发语言</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">制品类型</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">docker</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CI/CD</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">jenkins</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">配置文件类型</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">*.yml</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-</tbody>
-</table>
 </div>
 </div>
 <div class="sect1">
-<h2 id="基本组件">基本组件</h2>
+<h2 id="使用">使用</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>gradle中</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-gradle" data-lang="gradle">    implementation('io.github.baseinsight:core-starter:x.x.x-SNAPSHOT')</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+需要添加repositories:      maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="描述">功能描述</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="统一的错误处理">统一的错误处理</h3>
+<div class="paragraph">
+<p>统一输出错误json, 是实例化的ApiError类的json字符串输出。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="entity-类的json-输出">entity 类的json 输出</h3>
+<div class="paragraph">
+<p>系统默认使用spring MVC内置的jacksonJSON进行json转换输出。</p>
+</div>
+<div class="sect3">
+<h4 id="使用jsonformat注解指明date类型字段转换为json的规则如下">使用@JsonFormat注解指明Date类型字段转换为json的规则，如下：</h4>
+<div class="literalblock">
+<div class="content">
+<pre>@JsonFormat(pattern = "yyyy-MM-dd",timezone="GMT+8")
+Date loginTime;</pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="使用jsonserializeusingentitysimplejsonserializer-class注解来指明entity类的外键对象json规则默认生成idlabelclass三个属性序列id显示labelclass类名">使用@JsonSerialize(using=EntitySimpleJsonSerializer.class)注解来指明Entity类的外键对象json规则，默认生成id，label，class三个属性（序列id、显示label，class类名）</h4>
+<div class="literalblock">
+<div class="content">
+<pre>@JsonSerialize(using=EntitySimpleJsonSerializer.class)
+BaseUser baseUser;</pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="使用entitysimplejsonformat注解配合jsonserialize来定制化entity类的外键对象json规则支持values和ignores两种字段设置方式">使用@EntitySimpleJsonFormat注解配合JsonSerialize来定制化Entity类的外键对象json规则,支持values和ignores两种字段设置方式</h4>
+<div class="literalblock">
+<div class="content">
+<pre>@JsonSerialize(using=EntitySimpleJsonSerializer.class)
+@EntitySimpleJsonFormat(ignores=['version','dateCreated','lastUpdated'])
+BaseUser baseUser;</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="提供辅助类">提供辅助类</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="annotation-注解">annotation 注解</h3>
+<div class="sect3">
+<h4 id="fullrestcontroller-注解">FullRestController 注解</h4>
+<div class="paragraph">
+<p>用于提供controller类的自动RequestMapping映射，从而使的系统开发人员不必再手工设置RequestMapping和指定view视图的名称。</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="entitysimplejsonformat注解">EntitySimpleJsonFormat注解</h4>
+<div class="paragraph">
+<p>是针对jacksonJson转换对象为json时使用的注解，配合JsonSerialize来定制化Entity类的外键对象json规则,支持values和ignores两种字段设置方式</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@JsonSerialize(using=EntitySimpleJsonSerializer.class)
+@EntitySimpleJsonFormat(ignores=['version','dateCreated','lastUpdated'])
+BaseUser baseUser;</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="辅助服务类">辅助服务类</h3>
+<div class="sect3">
+<h4 id="springutils类">SpringUtils类</h4>
+<div class="paragraph">
+<p>SpringUtils类静态方法</p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
+<col style="width: 50%;">
+<col style="width: 50%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">名称</th>
-<th class="tableblock halign-left valign-top">介绍</th>
-<th class="tableblock halign-left valign-top">说明</th>
+<th class="tableblock halign-left valign-top">action name</th>
+<th class="tableblock halign-left valign-top">描述</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">核心组件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="core.html">core-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">getApplicationContext()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">获取 应用context</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全组件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity.html">plugin-springsecurity-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">getResource(String resource)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">获取资源</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">缓存组件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="cache.html">plugin-cache-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">getBean(String name)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">获取bean</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">redis组件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="redis.html">plugin-redis-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">getConfiginfo(String key)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">获取application.yml的配置信息</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全rest插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-rest.html">plugin-springsecurity-rest-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">getI18nMessage(String code，List arguments，String defaultMessage，Locale locale)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">获取i18n资源的信息</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全rest-db插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-rest-db.html">plugin-springsecurity-rest-db-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">getI18nMessage(String code，List arguments，String defaultMessage)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">获取i18n资源的信息</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全rest-redis插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-rest-redis.html">plugin-springsecurity-rest-redis-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">getI18nMessage(String code，List arguments)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">获取i18n资源的信息</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全camunda插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-camunda.html">plugin-springsecurity-camunda-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">getI18nMessage(String code)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">获取i18n资源的信息</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全websocket插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-websocket.html">plugin-springsecurity-websocket-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">publishEvent(Object event)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">发布事件</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">publishEvent(AppEvent event)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">发布系统事件</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">addApplicationListener(ApplicationListener&lt;?&gt; listener)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">添加事件监听（订阅事件）</p></td>
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="系统部署">系统部署</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="默认支持spring-boot的标准模式部署-因此只需要打包运行即可">默认支持spring boot的标准模式部署， 因此只需要打包运行即可。</h3>
+<div class="paragraph">
+<p>运行开发工具的gradle的build或buildDependents,查看工程的build/libs目录，可以看到生成的jar文件。</p>
+</div>
+<div class="paragraph">
+<p>在生产环境中运行命令java -jar 命令。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">java -jar demo.jar</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="linux环境及docker的urandom问题">linux环境及docker的urandom问题</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>/dev/random和/dev/urandom是Linux系统中提供的随机伪设备，这两个设备的任务，是提供永不为空的随机字节数据流。很多解密程序与安全应用程序（如SSH Keys,SSL Keys等）需要它们提供的随机数据流。</p>
+</div>
+<div class="paragraph">
+<p>这两个设备的差异在于：/dev/random的random pool依赖于系统中断，因此在系统的中断数不足时，/dev/random设备会一直封锁，尝试读取的进程就会进入等待状态，直到系统的中断数充分够用, /dev/random设备可以保证数据的随机性。/dev/urandom不依赖系统的中断，也就不会造成进程忙等待，但是数据的随机性也不高。</p>
+</div>
+<div class="paragraph">
+<p>war 包模式运行会碰到这类问题影响性能,建议增加-Djava.security.egd=file:/dev/./urandom参数避免之.</p>
+</div>
+<div class="paragraph">
+<p>示例如下:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">#!/bin/sh
+java -Djava.security.egd=file:/dev/./urandom -jar /app/application.war</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+也可以通过在docker中部署解压后的应用程序，绕开此问题
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="事件机制">事件机制</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>核心默认提供事件AppStartupEvent、AppShutdown和事件基类AppEvent，编写相关的listener可订阅相关事件.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+若订阅基类AppEvent事件，则能收到全部框架发布的事件。
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="订阅事件">订阅事件</h3>
+<div class="sect3">
+<h4 id="使用独立listener类订阅">使用独立listener类订阅</h4>
+<div class="paragraph">
+<p>编写listener类来订阅事件</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Configuration
+class NewAppListener implements ApplicationListener&lt;AppStartupEvent&gt; {
+    @Override
+    void onApplicationEvent(AppStartupEvent event) {
+        System.out.println("i receiver system startup event:"+event.toString());
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="简便方法订阅">简便方法订阅</h4>
+<div class="paragraph">
+<p>也可使用SpringUtils辅助类的静态方法订阅</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">        SpringUtils.addApplicationListener(new ApplicationListener&lt;AppEvent&gt;() {
+            @Override
+            public void onApplicationEvent(AppEvent event) {
+                System.out.println("i receiver one system event: "+event.toString());
+            }
+        });</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="发布事件">发布事件</h3>
+<div class="paragraph">
+<p>使用SpringUtils辅助类的静态方法可以发布事件</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">SpringUtils.publishEvent(new AppEvent('测试事件'));</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0-SNAPSHOT<br>
-Last updated 2023-07-09 23:07:45 +0800
+Last updated 2023-07-10 21:16:05 +0800
 </div>
 </div>
 </body>

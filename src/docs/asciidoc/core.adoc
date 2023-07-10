@@ -10,150 +10,78 @@
 == 介绍
 是基础组件,提供框架层的底层支持、项目框架的基础功能、 系统错误整体处理器等功能
 
+[[版本]]
+
+*  0.0.6-SNAPSHOT
+
 [[使用]]
 == 使用
 gradle中
-[source,groovy]
+[source,gradle]
 ----
-    implementation('org.yunchen.gb:gb-core:1.3.1.0')
+    implementation('io.github.baseinsight:core-starter:x.x.x-SNAPSHOT')
 ----
+
+TIP: 需要添加repositories:      maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
+
 
 [[描述]]
 == 功能描述
-规范项目框架结构如下（参见link:../introduce.html[规约]中解释）：
 
-TIP:
+=== 统一的错误处理
 
+统一输出错误json, 是实例化的ApiError类的json字符串输出。
 
-[[默认开发规约]]
-== 默认开发规约
-
-=== 默认参数：系统会在request中提供key为isAjax的Attribute，值为boolean类型，用于controller中判断当前是否为ajax访问.
-
-=== 分页处理：系统默认的分页支持类是PageParams，支持前端bootstrap Table或easyui datagrid的分页访问
-
-[format="csv", options="header"]
-|===
-属性,description,类型,默认值
-max,每页的条数,int,10
-limit,每页的条数（非必须项 和max参数二选一即可）,int,10
-offset,当前数据的起始位置,int,0
-sort,排序字段,String,id
-order,排序顺序,String,desc
-|===
-
-=== controller的参数组装
-
-系统扩展spring MVC的参数组装功能，提供基于domain类的自动组装,遵循如下原则：
-
-    提交表单参数中若没有id参数，则系统自动创建全新的domain对象，并将其余参数自动赋值。
-    如果提交表单参数中包含id参数，则系统会调用domain类的get(id)方法，获取domain类的数据库实例，并将其余参数自动赋值。
-    赋值过程中自动忽略version、clob、blob、byte[]类型的字段赋值。如是Date或Time类型的字段，会调用domain类上字段的@DateTimeFormat注解，来实现自动日期赋值。
-    如果提交表单参数中包含外键的参数，使用 referenceDomain.id的模式，如“baseUser.id”，赋值时，系统会自动调用findById(id)方法获取外键对象实例，赋值为domain对象。
-
-    详细参见工程中用户、角色、登录记录等默认实现
-
-默认生成代码的映射结构
-
-[format="csv", options="header"]
-|===
-action name,view name,描述
-index,index.html,列表首页
-json,无,返回表格json数据
-create,create.html,创建页面
-save,无,保存处理返回json数据
-edit,edit.html,修改页面
-update,无,修改处理返回json数据
-show,show.html,展示页面
-detele,无,单条删除处理返回json数据
-deteles,无,多条删除处理返回json数据
-download,无,下载excel字节流
-|===
-
-=== json 输出
+=== entity 类的json 输出
 
 系统默认使用spring MVC内置的jacksonJSON进行json转换输出。
-
-==== 在domain类上使用@JsonIgnoreProperties进行属性过滤，将GORM中的一些属性排除出json的氛围，如下：
-    @JsonIgnoreProperties(["errors", "metaClass", "dirty", "attached", "dirtyPropertyNames","handler","target","session","entityPersisters","hibernateLazyInitializer","initialized","proxyKey","children"])
-    @Entity
-    class SystemLoginRecord implements GormEntity<SystemLoginRecord> {
-        。。。。。
-    }
 
 ==== 使用@JsonFormat注解指明Date类型字段转换为json的规则，如下：
 
     @JsonFormat(pattern = "yyyy-MM-dd",timezone="GMT+8")
-    Date loginTime
+    Date loginTime;
 
-==== 使用@JsonSerialize(using=GbDomainSimpleJsonSerializer.class)注解来指明domain类的外键对象json规则，默认生成id，label，class三个属性（序列id、显示label，class类名）
+==== 使用@JsonSerialize(using=EntitySimpleJsonSerializer.class)注解来指明Entity类的外键对象json规则，默认生成id，label，class三个属性（序列id、显示label，class类名）
 
-	@JsonSerialize(using=GbDomainSimpleJsonSerializer.class)
-	BaseUser baseUser
+	@JsonSerialize(using=EntitySimpleJsonSerializer.class)
+	BaseUser baseUser;
 
-==== 使用@GbDomainSimpleJsonFormat注解配合JsonSerialize来定制化domain类的外键对象json规则,支持values和ignores两种字段设置方式
+==== 使用@EntitySimpleJsonFormat注解配合JsonSerialize来定制化Entity类的外键对象json规则,支持values和ignores两种字段设置方式
 
-	@JsonSerialize(using=GbDomainSimpleJsonSerializer.class)
-	@GbDomainSimpleJsonFormat(ignores=['version','dateCreated','lastUpdated'])
-	BaseUser baseUser
+	@JsonSerialize(using=EntitySimpleJsonSerializer.class)
+	@EntitySimpleJsonFormat(ignores=['version','dateCreated','lastUpdated'])
+	BaseUser baseUser;
 
-=== 内置乐观锁
-
-    系统使用GORM进行数据的对象关系映射ORMAPPING，因此默认会为每一个domain类提供id、version两个内置属性。
-    id默认是long型的自增主键.可以通过mapping闭包设置为sequence或UUID
-    version字段是GORM内部维护的乐观锁，当数据发生修改时，version会自动增加1，系统使用它来判断是否发生了数据脏读，避免脏写。
 
 [[提供辅助类]]
 == 提供辅助类
 
 === annotation 注解
 
-==== GbController 注解
+==== FullRestController 注解
 
 用于提供controller类的自动RequestMapping映射，从而使的系统开发人员不必再手工设置RequestMapping和指定view视图的名称。
 
-==== GbRestController 注解
 
-增加GbRestController注解，读取application.yml中的配置 gb.rest.prefix 为controller的requestmap增加前缀
-[source,yml]
-----
-gb:
-    rest:
-      prefix:     #/api
-----
+==== EntitySimpleJsonFormat注解
 
-TIP: 默认为空，不影响系统运行
+是针对jacksonJson转换对象为json时使用的注解，配合JsonSerialize来定制化Entity类的外键对象json规则,支持values和ignores两种字段设置方式
 
-==== GbInterceptor 注解
-
-用于提供拦截器的注解，系统扫描添加此注解的对象注册为拦截器。其中的value为拦截器的PathPatterns列表，而excludes是忽略的PathPatterns列表。
-
-==== Title 注解
-
-是系统为domain类的属性提供的国际化注解，其方法名与i8n目录下的属性文件名称一致，如zh_CN方法对应messages_zh_CN.properties资源文件。代码生成工具会读取属性的注解值来设置页面展示和i8n的属性配置值。
-
-==== GbDomainSimpleJsonFormat注解
-
-是针对jacksonJson转换对象为json时使用的注解，配合JsonSerialize来定制化domain类的外键对象json规则,支持values和ignores两种字段设置方式
-
-	@JsonSerialize(using=GbDomainSimpleJsonSerializer.class)
-	@GbDomainSimpleJsonFormat(ignores=['version','dateCreated','lastUpdated'])
-	BaseUser baseUser
+	@JsonSerialize(using=EntitySimpleJsonSerializer.class)
+	@EntitySimpleJsonFormat(ignores=['version','dateCreated','lastUpdated'])
+	BaseUser baseUser;
 
 === 辅助服务类
 
-==== GbSpringUtils类
+==== SpringUtils类
 
-GbSpringUtils类静态方法
+SpringUtils类静态方法
 [format="csv", options="header"]
 |===
     action name,描述
     getApplicationContext() ,   获取 应用context
     getResource(String resource) , 获取资源
     getBean(String name)   ,         获取bean
-    isDomain(String domainName) ,  是否domain类
-    getDomain(String domainName) , 获取domain类
-    getDomainConstraintsMap(Class domainClass) ,   获取domain的约束定义
     getConfiginfo(String key)  ,        获取application.yml的配置信息
     getI18nMessage(String code，List arguments，String defaultMessage，Locale locale)  , 获取i18n资源的信息
     getI18nMessage(String code，List arguments，String defaultMessage) , 获取i18n资源的信息
@@ -163,37 +91,6 @@ GbSpringUtils类静态方法
     publishEvent(AppEvent event) , 发布系统事件
     addApplicationListener(ApplicationListener<?> listener) , 添加事件监听（订阅事件）
 |===
-
-==== PageParams类
-
-支持前端bootstrap Table或easyui datagrid的分页访问
-
-[format="csv", options="header"]
-|===
-属性,description,类型,默认值
-max,每页的条数,int,10
-limit,每页的条数（非必须项 和max参数二选一即可）,int,10
-offset,当前数据的起始位置,int,0
-sort,排序字段,String,id
-order,排序顺序,String,desc
-|===
-
-==== 关于分页类的强制限制
-
-PageParam类有一个强制限制，max的值不能大于100，这在页面展示中没有问题，但当在服务端其他场景下复用此类时就比较麻烦，需要
-绕开此限制。
-PageParam类有一个的构造函数，接受boolean值的参数，可以关闭max<=100的强制限制，因为页面访问
-时，由controller委托spring 构建PageParam参数，因此不受改动影响，任然执行强制限制
-示例如下：
-[source,groovy]
-----
-PageParam pageParam = new PageParam(false);
-List allList=baseUserService.list(pageParams,{});
-----
-
-==== GORM
-
-关于GORM的动态方法和使用方式，参阅link:../dataOperator.html[GORM增强方法]内的相关内容
 
 == 系统部署
 
@@ -208,49 +105,6 @@ List allList=baseUserService.list(pageParams,{});
 java -jar demo.jar
 ----
 
-=== 容器部署(tomcat)
-
-Spring Boot内嵌容器支持Tomcat、Jetty、Undertow、jetty.
-
-==== tomcat
-
-tomcat 8 之后无须进行xml配置，使用gradle刷新类库依赖后，使用gradle buildDependents打war包后，部署即可。
-
-===== tomcat部署的优化设置
-
-    修改conf/server.xml，在contenxt的Connector中增加URIEncoding="UTF-8"
-
-    增加java options:
-    -Xms4096m –Xmx4096m  //建议配置内存数值及以上
-    -XX:PermSize=256m
-    -XX:MaxNewSize=256m
-    -XX:MaxPermSize=256m
-
-== rest接口支持
-
-因为使用angularJs,vuejs,react等客户端方案时,提交至服务器端的请求的content-type,可能为application/x-www-form-urlcoded,application/json,application/xml
-
-而普通的form方式,提交至服务器端的请求的content-type,可能为application/x-www-form-urlcoded,multipart/form-data
-
-TIP:springMVC推荐使用RequestBody注解,但经测发现此注解只支持controller方法中的一个参数,赋值为提交的json或xml整体string字符串
-
-提供如下兼容的方式处理
-
- === application.yml配置
-
- [source,yml]
- ----
- gb:
-    mvc:
-      autoTransJson2parameter: true   # true or false  // <1>
-      parameterTypeDefault: newInstance # null or newInstance  // <2>
- ----
-
-<1> 是否需要提供request reader 到request parameter的转换
-<2> 默认没有对应的参数,是提供默认实例还是null值
-<3> 不支持RequestBody注解,请删除controller中的RequestBody批注
-
-TIP: 可以配合GbRestController注解一起使用
 
 == linux环境及docker的urandom问题
 
@@ -282,36 +136,35 @@ TIP: 若订阅基类AppEvent事件，则能收到全部框架发布的事件。
 
 编写listener类来订阅事件
 
-[source,groovy]
+[source,java]
 ----
 @Configuration
-@Slf4j
 class NewAppListener implements ApplicationListener<AppStartupEvent> {
     @Override
     void onApplicationEvent(AppStartupEvent event) {
-        println "i receiver system startup event: ${event}";
+        System.out.println("i receiver system startup event:"+event.toString());
     }
 }
 ----
 
 ==== 简便方法订阅
 
-也可使用GbSpringUtils辅助类的静态方法订阅
+也可使用SpringUtils辅助类的静态方法订阅
 
-[source,groovy]
+[source,java]
 ----
-        GbSpringUtils.addApplicationListener(new ApplicationListener<AppEvent>() {
+        SpringUtils.addApplicationListener(new ApplicationListener<AppEvent>() {
             @Override
-            void onApplicationEvent(AppEvent event) {
-                println "i receiver one system event: ${event}"
+            public void onApplicationEvent(AppEvent event) {
+                System.out.println("i receiver one system event: "+event.toString());
             }
-        })
+        });
 ----
 
 === 发布事件
 
-使用GbSpringUtils辅助类的静态方法可以发布事件
+使用SpringUtils辅助类的静态方法可以发布事件
 [source,groovy]
 ----
-GbSpringUtils.publishEvent(new AppEvent('测试事件'));
+SpringUtils.publishEvent(new AppEvent('测试事件'));
 ----

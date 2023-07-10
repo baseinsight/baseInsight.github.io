@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
-<meta name="author" content="author: 肖鹏 &lt;13910818313@163.com&gt;">
-<title>关于baseInsight</title>
+<meta name="author" content="作者：肖鹏 &lt;13910818313@163.com&gt;">
+<title>camunda 工作流插件</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -441,85 +441,115 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>关于baseInsight</h1>
+<h1>camunda 工作流插件</h1>
 <div class="details">
-<span id="author" class="author">author: 肖鹏 &lt;13910818313@163.com&gt;</span><br>
-<span id="revnumber">version 1.0.0-SNAPSHOT,</span>
-<span id="revdate">2023-06-07</span>
+<span id="author" class="author">作者：肖鹏 &lt;13910818313@163.com&gt;</span><br>
+<span id="revnumber">version 1.0.0-SNAPSHOT</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#基本组件">基本组件</a></li>
+<li><a href="#介绍">介绍</a></li>
+<li><a href="#版本历史">版本历史</a></li>
+<li><a href="#使用">使用</a>
+<ul class="sectlevel2">
+<li><a href="#使用gradle-插件">使用gradle 插件</a></li>
+</ul>
+</li>
+<li><a href="#日志跟踪">日志跟踪</a></li>
+<li><a href="#约定">约定</a>
+<ul class="sectlevel2">
+<li><a href="#service-bean">service bean</a></li>
+<li><a href="#domain-类">domain 类</a></li>
+<li><a href="#application-yml">application.yml</a></li>
+<li><a href="#流程部署及控制">流程部署及控制</a></li>
+<li><a href="#新工作流程的制作步骤">新工作流程的制作步骤</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div id="preamble">
+<div class="sect1">
+<h2 id="介绍">介绍</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>系统定位是快速开发的起步框架,目标是希望减少开发人员在框架层付出，精力聚焦于业务逻辑的实现。采用轻量化、组件式的设计模式来引导终端开发人员应对多变的WEB应用系统的开发。</p>
+<p>提供camunda 最新版本 7.20.0.alpha2 工作流的功能集成。
+因为制品库org.camunda.bpm.springboot:camunda-bpm-spring-boot-starter:7.20.0.alpha2内置了javax.servlet,因此只能使用tomcat9部署，也因此只能适配springboot2.7.9; 而baseInsight框架使用springboot3.1.0，内置了tomcat10，迁移至jakarta.servlet等命名空间，因此研发此插件，补齐工作流引擎的初始配置，并与系统的springsecurity 默认集成.</p>
 </div>
-<div class="paragraph">
-<p>为避免重复发明轮子，以集成成型的优质的开源框架为主要模式，采用微内核、多插件的形式，提供对业务场景的支持。
-系统由内核core系统包和多个springboot-start构成一个完备的项目示例工程，辅以完备的在线文档（markdown或adoc）来指引开发人员。</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">分类</th>
-<th class="tableblock halign-left valign-top">推荐</th>
-<th class="tableblock halign-left valign-top">说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">开发工具</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">idea intellij</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">构建工具</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">gradle</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">代码管理</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">git</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">开发语言</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">制品类型</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">docker</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CI/CD</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">jenkins</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">配置文件类型</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">*.yml</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-</tbody>
-</table>
 </div>
 </div>
 <div class="sect1">
-<h2 id="基本组件">基本组件</h2>
+<h2 id="版本历史">版本历史</h2>
 <div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>0.0.7-SNAPSHOT</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="使用">使用</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="使用gradle-插件">使用gradle 插件</h3>
+<div class="sect3">
+<h4 id="添加插件">添加插件</h4>
+<div class="paragraph">
+<p>gradle中</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">    implementation('io.github.baseinsight:plugin-springsecurity-camunda-starter:x.x.x-SNAPSHOT')</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="日志跟踪">日志跟踪</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>如果使用applicaton.yml中的配置</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-yml" data-lang="yml">logging.level.org.hibernate.SQL: TRACE
+logging.level.org.hibernate.type.descriptor.sql.BasicBinder: TRACE</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>如果感觉不直观，无法确切跟踪camunda执行的sql语句，可开启logback （将resources目录下的logback.xmlbak更名为logback.xml即可）。
+在其中添加语句：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-yml" data-lang="yml">。。。。。。
+&lt;logger name="org.camunda.engine.impl.persistence.entity" level="DEBUG" /&gt;
+。。。。。。
+&lt;/configuration&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="约定">约定</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>默认系统有如下约定</p>
+</div>
+<div class="sect2">
+<h3 id="service-bean">service bean</h3>
+<div class="paragraph">
+<p>默认插件将cumunda的服务注册为spring 的bean</p>
+</div>
+<div class="paragraph">
+<p>具体功能api请参考camunda的相关文档</p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -528,66 +558,183 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">名称</th>
-<th class="tableblock halign-left valign-top">介绍</th>
-<th class="tableblock halign-left valign-top">说明</th>
+<th class="tableblock halign-left valign-top">name</th>
+<th class="tableblock halign-left valign-top">描述</th>
+<th class="tableblock halign-left valign-top">api</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">核心组件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="core.html">core-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">processEngine</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">流程引擎</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">org.camunda.engine.ProcessEngine</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全组件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity.html">plugin-springsecurity-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">runtimeService</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">运行时服务类</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">org.camunda.engine.RuntimeService</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">缓存组件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="cache.html">plugin-cache-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">repositoryService</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">知识库服务类</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">org.camunda.engine.RepositoryService</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">redis组件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="redis.html">plugin-redis-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">taskService</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">任务服务类</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">org.camunda.engine.TaskService</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全rest插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-rest.html">plugin-springsecurity-rest-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">managementService</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">管理服务类</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">org.camunda.engine.ManagementService</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全rest-db插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-rest-db.html">plugin-springsecurity-rest-db-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">identityService</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">身份服务类</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">org.camunda.engine.IdentityService</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全rest-redis插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-rest-redis.html">plugin-springsecurity-rest-redis-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">historyService</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">历史信息服务类</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">org.camunda.engine.HistoryService</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全camunda插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-camunda.html">plugin-springsecurity-camunda-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全websocket插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-websocket.html">plugin-springsecurity-websocket-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">formService</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">表单服务类</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">org.camunda.engine.FormService</p></td>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="sect2">
+<h3 id="domain-类">domain 类</h3>
+<div class="paragraph">
+<p>用户、角色都需要实现camunda的identity接口。</p>
+</div>
+<div class="paragraph">
+<p>BaseUser类的id改为String，使用uuid替代自增.多了三个属性firstName,lastName,email。原类中的realname属性不再需要，生成的工程中没有剔除，视项目情况大家手动处理。</p>
+</div>
+<div class="paragraph">
+<p>BaseRole类增加了name属性，原类中的description属性不再需要，生成的工程中没有剔除，视项目情况大家手动处理。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="application-yml">application.yml</h3>
+<div class="paragraph">
+<p>在application.yml增加了如下属性:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-yml" data-lang="yml">base:
+    camunda:
+      processEngineName: camundaProcessEngine
+      databaseSchemaUpdate: create   #  create-drop , true ,false ，create 中的一个
+      deploymentName: gbDeploymentName
+      deploymentResources: file:./src/main/resources/**/camunda/**/*.bpmn*.xml , file:./src/main/resources/**/camunda/**/*.png , file:./src/main/resources/**/camunda/**/*.form
+      jobExecutorActivate: false
+      history: audit    #归档类型 none、activity、audit、full 四种类型
+      mailServerHost: mail.email.com
+      mailServerPort: 25
+      mailServerUsername: user@email.com
+      mailServerPassword: pass
+      mailServerDefaultFrom: user@email.com
+      #disableCustomPreVariableTypes: true
+      databaseType: h2  # 数据库类型支持 db2, h2 ,hsql ,mssql,mysql, oracle,postgres</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>其中的deploymentResources 指扫描相关路径的文件，使用“,”分隔 , 建议在生成环境设置为/ 字符</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="流程部署及控制">流程部署及控制</h3>
+<div class="paragraph">
+<p>根据deploymentResources扫描路径自动部署流程,默认在resources\templates\camunda目录中的流程自动部署。</p>
+</div>
+<div class="paragraph">
+<p>默认有一个vacationRequest请假单流程,</p>
+</div>
+<div class="paragraph">
+<p>可以通过admin/admin登录系统后，进入流程管理菜单，点击部署按钮，可在线部署xml流程（bar文件也可）</p>
+</div>
+<div class="paragraph">
+<p>/camundaMonitor/index 是流程管理界面</p>
+</div>
+<div class="paragraph">
+<p>也可以在线通过model设计进行保存，并在线部署。</p>
+</div>
+<div class="sect3">
+<h4 id="控制界面">控制界面</h4>
+<div class="sect4">
+<h5 id="代办任务">代办任务</h5>
+<div class="paragraph">
+<p>/camundaTask/index 是代办任务的地址</p>
+</div>
+<div class="paragraph">
+<p>/camundaTask/canStart 是可启动流程列表的地址</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="流程示例">流程示例</h4>
+<div class="paragraph">
+<p>默认有一个vacationRequest请假单流程,</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-yml" data-lang="yml"># 请假流程
+resources\templates\camunda\vacationRequest.xml
+resources\templates\camunda\vacationRequest.png
+
+# 请假domain类
+
+domain\demo\VacationRequest.groovy
+
+# 请假controller类（默认约定表单提交到流程自己的controller处理）
+
+controller\demo\VacationRequestController.groovy
+
+# 请假的节点表单 (其中的xxx为流程xml中的userTask的id名，默认约定使用_作为文件名开始字符)
+web-app\WEB-INF\jsp\camundaForm\${流程名称}\_xxx.jsp</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="新工作流程的制作步骤">新工作流程的制作步骤</h3>
+<div class="sect3">
+<h4 id="开发业务流程">开发业务流程</h4>
+<div class="paragraph">
+<p>使用eclipse或camunda designer 设计工作流xml</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="创建流程domain类">创建流程domain类</h4>
+<div class="paragraph">
+<p>创建流程domain类</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="创建流程controller类">创建流程controller类</h4>
+<div class="paragraph">
+<p>创建流程controller类，用于处理数据保存和流程执行。</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="创建流程节点的jsp页面">创建流程节点的jsp页面</h4>
+<div class="paragraph">
+<p>为每个流程节点画jsp页面</p>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0-SNAPSHOT<br>
-Last updated 2023-07-09 23:07:45 +0800
+Last updated 2023-07-10 23:03:29 +0800
 </div>
 </div>
 </body>

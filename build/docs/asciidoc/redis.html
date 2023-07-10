@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
-<meta name="author" content="author: 肖鹏 &lt;13910818313@163.com&gt;">
-<title>关于baseInsight</title>
+<meta name="author" content="作者：肖鹏 &lt;13910818313@163.com&gt;">
+<title>redis 插件使用</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -441,85 +441,124 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>关于baseInsight</h1>
+<h1>redis 插件使用</h1>
 <div class="details">
-<span id="author" class="author">author: 肖鹏 &lt;13910818313@163.com&gt;</span><br>
-<span id="revnumber">version 1.0.0-SNAPSHOT,</span>
-<span id="revdate">2023-06-07</span>
+<span id="author" class="author">作者：肖鹏 &lt;13910818313@163.com&gt;</span><br>
+<span id="revnumber">version 1.0.0-SNAPSHOT</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#基本组件">基本组件</a></li>
+<li><a href="#介绍">介绍</a></li>
+<li><a href="#版本历史">版本历史</a></li>
+<li><a href="#使用">使用</a>
+<ul class="sectlevel2">
+<li><a href="#使用gradle-插件">使用gradle 插件</a></li>
+</ul>
+</li>
+<li><a href="#配置">配置</a></li>
+<li><a href="#使用">使用</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div id="preamble">
+<div class="sect1">
+<h2 id="介绍">介绍</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>系统定位是快速开发的起步框架,目标是希望减少开发人员在框架层付出，精力聚焦于业务逻辑的实现。采用轻量化、组件式的设计模式来引导终端开发人员应对多变的WEB应用系统的开发。</p>
+<p>介绍如何使用redis插件提供redis存取和缓存服务,插件包装了org.springframework.boot:spring-boot-starter-data-redis 和cache 插件的依赖.</p>
 </div>
-<div class="paragraph">
-<p>为避免重复发明轮子，以集成成型的优质的开源框架为主要模式，采用微内核、多插件的形式，提供对业务场景的支持。
-系统由内核core系统包和多个springboot-start构成一个完备的项目示例工程，辅以完备的在线文档（markdown或adoc）来指引开发人员。</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">分类</th>
-<th class="tableblock halign-left valign-top">推荐</th>
-<th class="tableblock halign-left valign-top">说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">开发工具</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">idea intellij</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">构建工具</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">gradle</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">代码管理</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">git</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">开发语言</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">制品类型</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">docker</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CI/CD</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">jenkins</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">配置文件类型</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">*.yml</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-</tbody>
-</table>
 </div>
 </div>
 <div class="sect1">
-<h2 id="基本组件">基本组件</h2>
+<h2 id="版本历史">版本历史</h2>
 <div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>0.0.7-SNAPSHOT</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="使用">使用</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="使用gradle-插件">使用gradle 插件</h3>
+<div class="sect3">
+<h4 id="添加插件">添加插件</h4>
+<div class="paragraph">
+<p>gradle中</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">    implementation('io.github.baseinsight:plugin-redis-starter:x.x.x-SNAPSHOT')</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="配置">配置</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>配置application.yml文件:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">spring:
+  cache:
+    type: redis #simple                 <i class="conum" data-value="1"></i><b>(1)</b>
+  redis:
+    cacheTtl: ofHours #ofDays,ofMillis,ofMinutes,ofNanos,ofSeconds   <i class="conum" data-value="2"></i><b>(2)</b>
+    ttlValue: 1        <i class="conum" data-value="3"></i><b>(3)</b>
+    cacheNamePrefix: base         <i class="conum" data-value="4"></i><b>(4)</b>
+    host: localhost             <i class="conum" data-value="5"></i><b>(5)</b>
+    port: 6379                  <i class="conum" data-value="6"></i><b>(6)</b>
+    database: 0                 <i class="conum" data-value="7"></i><b>(7)</b>
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+        max-wait: -1</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>将系统cache从simple 设置为 redis</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>缓存的类型 共 ofHours,ofDays,ofMillis,ofMinutes,ofNanos,ofSeconds 六种</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>缓存时间,整形值,配合cacheTtl类型,可以为多少小时,多少天,多少分钟等</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>缓存名称的前缀名
+&lt;5&gt;&lt;6&gt;&lt;7&gt; 设置redis的地址端口和数据库</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="使用">使用</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>插件将默认的RedisTemplate&lt;Object, Object&gt; 替换为方便使用的RedisTemplate&lt;String, Object&gt;.</p>
+</div>
+<div class="paragraph">
+<p>插件提供的RedisService类,封装了一般的redis操作</p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -528,56 +567,196 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">名称</th>
-<th class="tableblock halign-left valign-top">介绍</th>
-<th class="tableblock halign-left valign-top">说明</th>
+<th class="tableblock halign-left valign-top">方法名</th>
+<th class="tableblock halign-left valign-top">参数</th>
+<th class="tableblock halign-left valign-top">描述</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">核心组件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="core.html">core-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">expire</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key，long time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">指定缓存失效时间</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全组件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity.html">plugin-springsecurity-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">getExpire</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">根据key获取过期时间</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">缓存组件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="cache.html">plugin-cache-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hasKey</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">判断key是否存在</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">redis组件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="redis.html">plugin-redis-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">del</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String&#8230;&#8203; key</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">删除缓存</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全rest插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-rest.html">plugin-springsecurity-rest-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">get</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">普通缓存获取</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全rest-db插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-rest-db.html">plugin-springsecurity-rest-db-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">set</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key，Object value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">普通缓存放入</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全rest-redis插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-rest-redis.html">plugin-springsecurity-rest-redis-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">set</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key，Object value，long time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">普通缓存放入并设置时间</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全camunda插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-camunda.html">plugin-springsecurity-camunda-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">incr</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key，long delta</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">递增</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全websocket插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-websocket.html">plugin-springsecurity-websocket-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">decr</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key，long delta</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">递减</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hget</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key， String item</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HashGet</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hmget</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">获取hashKey对应的所有键值</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hmset</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key，Map &lt;String，Object&gt; map</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HashSet</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hmset</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key，long delta，long time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HashSet 并设置时间</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hset</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key，String item，Object value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">向一张hash表中放入数据，如果不存在将创建</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hset</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key，String item，Object value，long time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">向一张hash表中放入数据</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">如果不存在将创建</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hdel</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key， Object&#8230;&#8203; item</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">删除hash表中的值</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hHasKey</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key，String item</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">判断hash表中是否有该项的值</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hincr</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key，String item，double by</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hash递增 如果不存在</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">就会创建一个 并把新增后的值返回</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hdecr</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key，String item，double by</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hash递减</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sGet</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">根据key获取Set中的所有值</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sHasKey</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key，Object value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">根据value从一个set中查询</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">是否存在</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sSet</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key，Object&#8230;&#8203; values</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">将数据放入set缓存</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sSetAndTime</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key，long time，Object&#8230;&#8203; values</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">将set数据放入缓存</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sGetSetSize</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">获取set缓存的长度</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">setRemove</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key，Object value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">移除值为value的</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lGet</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key，long start， long end</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">获取list缓存的内容</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lGetListSize</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">获取list缓存的长度</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lGetIndex</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key，long index</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">通过索引 获取list中的值</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lSet</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key，Object value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">将list放入缓存</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lSet</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key，Object value，long time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">将list放入缓存</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lSet</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key，List &lt;Object&gt; value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">将list放入缓存</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lSet</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key，List &lt;Object&gt; value，long time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">将list放入缓存</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lUpdateIndex</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key，long index，Object value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">根据索引修改list中的某条数据</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lRemove</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key，long count，Object value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">移除N个值为value</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">setIfAbsent</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key，Object value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">设置值，如果存在，返回false，不存在进行保存</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">setIfAbsent</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String key，Object value，long timeout， TimeUnit unit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">设置值，如果存在，返回false，不存在进行保存，加上过期时间</p></td>
 </tr>
 </tbody>
 </table>
@@ -587,7 +766,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0-SNAPSHOT<br>
-Last updated 2023-07-09 23:07:45 +0800
+Last updated 2023-07-10 21:40:12 +0800
 </div>
 </div>
 </body>

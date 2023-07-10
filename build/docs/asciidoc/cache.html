@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
-<meta name="author" content="author: 肖鹏 &lt;13910818313@163.com&gt;">
-<title>关于baseInsight</title>
+<meta name="author" content="作者：肖鹏 &lt;13910818313@163.com&gt;">
+<title>cache 插件使用</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -441,85 +441,172 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>关于baseInsight</h1>
+<h1>cache 插件使用</h1>
 <div class="details">
-<span id="author" class="author">author: 肖鹏 &lt;13910818313@163.com&gt;</span><br>
-<span id="revnumber">version 1.0.0-SNAPSHOT,</span>
-<span id="revdate">2023-06-07</span>
+<span id="author" class="author">作者：肖鹏 &lt;13910818313@163.com&gt;</span><br>
+<span id="revnumber">version 1.0.0-SNAPSHOT</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#基本组件">基本组件</a></li>
+<li><a href="#介绍">介绍</a></li>
+<li><a href="#版本历史">版本历史</a></li>
+<li><a href="#使用">使用</a>
+<ul class="sectlevel2">
+<li><a href="#使用gradle-插件">使用gradle 插件</a></li>
+</ul>
+</li>
+<li><a href="#配置">配置</a></li>
+<li><a href="#使用">使用</a>
+<ul class="sectlevel2">
+<li><a href="#配置application">配置Application</a></li>
+<li><a href="#使用cacheable注解">使用@Cacheable注解</a></li>
+<li><a href="#使用cacheevict注解">使用@CacheEvict注解</a></li>
+<li><a href="#使用cacheput注解">使用@CachePut注解</a></li>
+</ul>
+</li>
+<li><a href="#配合redis进行缓存处理">配合redis进行缓存处理</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div id="preamble">
+<div class="sect1">
+<h2 id="介绍">介绍</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>系统定位是快速开发的起步框架,目标是希望减少开发人员在框架层付出，精力聚焦于业务逻辑的实现。采用轻量化、组件式的设计模式来引导终端开发人员应对多变的WEB应用系统的开发。</p>
+<p>介绍如何使用cache提供缓存服务,插件包装了org.springframework.boot:spring-boot-starter-cache.</p>
 </div>
-<div class="paragraph">
-<p>为避免重复发明轮子，以集成成型的优质的开源框架为主要模式，采用微内核、多插件的形式，提供对业务场景的支持。
-系统由内核core系统包和多个springboot-start构成一个完备的项目示例工程，辅以完备的在线文档（markdown或adoc）来指引开发人员。</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">分类</th>
-<th class="tableblock halign-left valign-top">推荐</th>
-<th class="tableblock halign-left valign-top">说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">开发工具</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">idea intellij</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">构建工具</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">gradle</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">代码管理</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">git</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">开发语言</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">制品类型</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">docker</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CI/CD</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">jenkins</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">配置文件类型</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">*.yml</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-</tbody>
-</table>
 </div>
 </div>
 <div class="sect1">
-<h2 id="基本组件">基本组件</h2>
+<h2 id="版本历史">版本历史</h2>
 <div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>0.0.7-SNAPSHOT</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="使用">使用</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="使用gradle-插件">使用gradle 插件</h3>
+<div class="sect3">
+<h4 id="添加插件">添加插件</h4>
+<div class="paragraph">
+<p>gradle中</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">    implementation('io.github.baseinsight:plugin-cache-starter:x.x.x-SNAPSHOT')</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="配置">配置</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>配置application.yml文件:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">spring:
+  cache:
+    type: simple</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="使用">使用</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>cache使用简便,主要是@EnableCaching,@Cacheable,@CacheEvict,@CachePut四个注解</p>
+</div>
+<div class="sect2">
+<h3 id="配置application">配置Application</h3>
+<div class="paragraph">
+<p>在项目的Application类上添加@EnableCaching注解,从而允许程序扫描所有的缓存注解</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@SpringBootApplication
+@EnableCaching
+public class DemoApplication {
+    //.......
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="使用cacheable注解">使用@Cacheable注解</h3>
+<div class="paragraph">
+<p>在方法上添加@Cacheable,将结果放入缓存</p>
+</div>
+<div class="sect3">
+<h4 id="标准用法">标准用法</h4>
+<div class="paragraph">
+<p>使用默认的SimpleKeyGenerator</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    @Cacheable(value="baseUserJson")
+    @ResponseBody
+    public Map json(String search, String role) {
+        //......
+    }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="配合内置keygenerator的用法">配合内置keyGenerator的用法</h4>
+<div class="paragraph">
+<p>插件提供了内置的keyGenerator:BaseKeyGenerator用法如下:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    @Cacheable(value="baseUserJson",keyGenerator = "BaseKeyGenerator")
+    @ResponseBody
+    public Map json(String search, String role) {
+        //......
+    }</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+在生成key时,BaseKeyGenerator会比SimpleKeyGenerator多增加一个class名称. 但为了应付更复杂的缓存要求,
+建议使用配合插件内置的@TokenGeneratorHelper进行高级设置
+</td>
+</tr>
+</table>
+</div>
+<div class="sect4">
+<h5 id="高级设置">高级设置</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    @TokenGeneratorHelper(withHeaderkeys = "token,Content-Type",withDateFormat = "yyyy-MM-dd hh",withRemoteUser = true)
+    @Cacheable(value="baseUserJson",keyGenerator = "BaseKeyGenerator")
+    @ResponseBody
+    public Map json(String search, String role) {
+        //........
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>TokenGeneratorHelper注解的参数:</p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -528,66 +615,129 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">名称</th>
-<th class="tableblock halign-left valign-top">介绍</th>
-<th class="tableblock halign-left valign-top">说明</th>
+<th class="tableblock halign-left valign-top">参数名</th>
+<th class="tableblock halign-left valign-top">默认值</th>
+<th class="tableblock halign-left valign-top">描述</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">核心组件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="core.html">core-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">withClassName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">key中是否携带类名</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全组件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity.html">plugin-springsecurity-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">withMethodName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">key中是否携带方法名</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">缓存组件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="cache.html">plugin-cache-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">withParams</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">key中是否携带全部调用参数</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">redis组件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="redis.html">plugin-redis-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">withSessionId</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">key中是否携带sessionId</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全rest插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-rest.html">plugin-springsecurity-rest-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">withRemoteUser</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">key中是否携带reqeust.remoteUser的值</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全rest-db插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-rest-db.html">plugin-springsecurity-rest-db-starter</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">withHeaderKeys</p></td>
 <td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">key中是否携带header中的值(使用逗号隔开的header关键词的字符串)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全rest-redis插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-rest-redis.html">plugin-springsecurity-rest-redis-starter</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">withAttributesKeys</p></td>
 <td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">key中是否携带request attributes中的值(使用逗号隔开的request attributes关键词的字符串)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全camunda插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-camunda.html">plugin-springsecurity-camunda-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">withAllRequestParameter</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">key中是否携带request的parameter的各个参数值</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全websocket插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-websocket.html">plugin-springsecurity-websocket-starter</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">withRequestParameterKeys</p></td>
 <td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">key中是否携带request的parameter的指定参数值(使用逗号隔开的parameter关键词的字符串)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">withPrincipal</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">key中是否携带principal(需要确保项目已引用了springsecurity插件)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">withDateFormat</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">key中是否携带当前日期的固定格式(如"yyyy-MM-dd hh"表示一小时内的值相同)</p></td>
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="使用cacheevict注解">使用@CacheEvict注解</h3>
+<div class="paragraph">
+<p>在方法上添加@CacheEvict,清除特定名称的缓存.添加allEntries=true,会清除掉value名称下的全部缓存.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    @CacheEvict(value = 'userJson', allEntries=true)
+    public void update(long id) {
+         ..........
+     }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="使用cacheput注解">使用@CachePut注解</h3>
+<div class="paragraph">
+<p>在方法上添加@CachePut,将结果放入到缓存中.也可以配合内置keyGenerator使用</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    @CachePut(value="somevalue",keyGenerator = "BaseKeyGenerator")
+    public Map someMethod(String arg0, String arg1) {
+        ..........
+    }</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+不建议使用@CachePut来更新缓存,因为具体使用@Cacheable的方法逻辑与当前的方法逻辑不一定相同,
+未来可能独立演变,甚至可能由不同团队人员开发,依靠开发约定保证两者唯一太危险.
+建议采用@CacheEvict注解触发缓存清除,而由@Cacheable的方法逻辑来更新缓存.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="配合redis进行缓存处理">配合redis进行缓存处理</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>参看<a href="redis.html">data-redis插件</a></p>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0-SNAPSHOT<br>
-Last updated 2023-07-09 23:07:45 +0800
+Last updated 2023-07-10 22:04:56 +0800
 </div>
 </div>
 </body>

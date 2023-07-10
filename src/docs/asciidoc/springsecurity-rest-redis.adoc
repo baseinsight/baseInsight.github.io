@@ -1,0 +1,81 @@
+= Spring Security REST REDIS 插件
+作者：肖鹏 <13910818313@163.com>
+
+:source-highlighter: highlight.js
+:imagesdir: images
+:sourcedir: ../../main/java
+:build-gradle: ../../../build.gradle
+
+[[介绍]]
+== 介绍
+扩展的spring security rest 功能, 提供将token 存储进REDIS,同时提供了logout功能。
+默认启用SecureRandomTokenGenerator生成token,不支持refresh_token操作.
+
+[[版本历史]]
+
+== 版本历史
+
+*  0.0.7-SNAPSHOT
+
+[[使用]]
+== 使用
+
+=== 使用gradle 插件
+
+==== 添加插件
+gradle中
+[source,groovy]
+----
+    implementation('io.github.baseinsight:plugin-springsecurity-rest-redis-starter:x.x.x-SNAPSHOT')
+----
+
+
+=== 修改yml配置
+
+[source,yml]
+----
+base:
+    springsecurity:
+      rest:
+        active: true
+        login:
+          active: true
+          endpointUrl: /api/login
+          usernamePropertyName: username
+          passwordPropertyName: password
+          failureStatusCode: 401  # HttpServletResponse.SC_UNAUTHORIZED
+          useJsonCredentials: true
+          useRequestParamsCredentials: false
+        logout:
+          endpointUrl: /api/logout
+        token:
+          generation:
+            useSecureRandom: true
+            useUUID: false
+            jwt:
+              issuer: Spring Security REST Plugin
+              algorithm: HS256
+              jweAlgorithm: RSA-OAEP
+              encryptionMethod: A128GCM
+          storage:
+            useJwt: false                        <1>
+            useDb: false                  <2>
+            useRedis:true             <3>
+            expiration: 3600           <4>
+            jwt:
+              useSignedJwt: false              <5>
+              useEncryptedJwt: false           <6>
+              privateKeyPath: /home/.priavte/
+              publicKeyPath: /home/.public
+              secret: atlease256bits(The secret length must be at least 256 bits)
+              expiration: 3600
+----
+<1> 关闭jwt
+<2> 关闭数据库存储
+<3> 启用redis存储
+<4> 设置key的过期时间
+<7> 关闭jwt签名
+<8> 关闭jwt加密
+
+TIP: 可在yml中只添加如上8行数据，其他的若不修改默认值可不添加至yml文件中
+

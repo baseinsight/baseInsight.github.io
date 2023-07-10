@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
-<meta name="author" content="author: 肖鹏 &lt;13910818313@163.com&gt;">
-<title>关于baseInsight</title>
+<meta name="author" content="作者：肖鹏 &lt;13910818313@163.com&gt;">
+<title>Spring Security 插件</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -441,153 +441,763 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>关于baseInsight</h1>
+<h1>Spring Security 插件</h1>
 <div class="details">
-<span id="author" class="author">author: 肖鹏 &lt;13910818313@163.com&gt;</span><br>
-<span id="revnumber">version 1.0.0-SNAPSHOT,</span>
-<span id="revdate">2023-06-07</span>
+<span id="author" class="author">作者：肖鹏 &lt;13910818313@163.com&gt;</span><br>
+<span id="revnumber">version 1.0.0-SNAPSHOT</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#基本组件">基本组件</a></li>
+<li><a href="#介绍">介绍</a></li>
+<li><a href="#版本历史">版本历史</a></li>
+<li><a href="#使用">使用</a>
+<ul class="sectlevel2">
+<li><a href="#使用gradle-插件">使用gradle 插件</a></li>
+</ul>
+</li>
+<li><a href="#描述">描述</a></li>
+<li><a href="#内置安全domain类">内置安全domain类</a></li>
+<li><a href="#开发规约">开发规约</a>
+<ul class="sectlevel2">
+<li><a href="#初始数据">初始数据</a></li>
+<li><a href="#登录事件">登录事件</a></li>
+<li><a href="#获取当前登录用户">获取当前登录用户</a></li>
+<li><a href="#当前用户鉴权操作">当前用户鉴权操作</a></li>
+</ul>
+</li>
+<li><a href="#提供辅助类">提供辅助类</a></li>
+<li><a href="#启用cors的处理">启用cors的处理</a></li>
+<li><a href="#jsr250-与-requestmap混合工作">jsr250 与 requestmap混合工作</a>
+<ul class="sectlevel2">
+<li><a href="#配置securityconfig类">配置SecurityConfig类</a></li>
+<li><a href="#在controller类中使用">在controller类中使用</a></li>
+</ul>
+</li>
+<li><a href="#国密算法支持">国密算法支持</a>
+<ul class="sectlevel2">
+<li><a href="#修改application-yml文件">修改application.yml文件</a></li>
+</ul>
+</li>
+<li><a href="#配置自定义算法">配置自定义算法</a>
+<ul class="sectlevel2">
+<li><a href="#配置applicaiton-yml">配置applicaiton.yml</a></li>
+<li><a href="#添加encoder回调方法">添加encoder回调方法</a></li>
+<li><a href="#添加matches回调方法">添加matches回调方法</a></li>
+<li><a href="#配置去掉加密后的算法标识">配置去掉加密后的算法标识</a></li>
+<li><a href="#修改系统的密码加密">修改系统的密码加密</a></li>
+</ul>
+</li>
+<li><a href="#配置验证时自定义加载用户">配置验证时自定义加载用户</a>
+<ul class="sectlevel2">
+<li><a href="#配置applicaiton-yml-2">配置applicaiton.yml</a></li>
+<li><a href="#添加loaduser回调方法">添加loaduser回调方法</a></li>
+<li><a href="#安全事件">安全事件</a></li>
+</ul>
+</li>
+<li><a href="#横向扩展">横向扩展</a>
+<ul class="sectlevel2">
+<li><a href="#session复制">session复制</a></li>
+<li><a href="#jwt方案">JWT方案</a></li>
+<li><a href="#cookie存储">cookie存储</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div id="preamble">
+<div class="sect1">
+<h2 id="介绍">介绍</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>系统定位是快速开发的起步框架,目标是希望减少开发人员在框架层付出，精力聚焦于业务逻辑的实现。采用轻量化、组件式的设计模式来引导终端开发人员应对多变的WEB应用系统的开发。</p>
+<p>提供开箱即用的spring security安全防护及配置。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="版本历史">版本历史</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>0.0.7-SNAPSHOT</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="使用">使用</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="使用gradle-插件">使用gradle 插件</h3>
+<div class="sect3">
+<h4 id="添加插件">添加插件</h4>
+<div class="paragraph">
+<p>gradle中</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">    implementation('io.github.baseinsight:plugin-springsecurity-starter:x.x.x-SNAPSHOT')</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="描述">描述</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>是spring security官网的除了Annotation注解、yml集中配置外的第三种标准方式，将授权、鉴权都存储入数据库的模式。<a href="https://docs.spring.io/spring-security/site/docs/current/reference/html5/">spring security参考文档</a></p>
 </div>
 <div class="paragraph">
-<p>为避免重复发明轮子，以集成成型的优质的开源框架为主要模式，采用微内核、多插件的形式，提供对业务场景的支持。
-系统由内核core系统包和多个springboot-start构成一个完备的项目示例工程，辅以完备的在线文档（markdown或adoc）来指引开发人员。</p>
+<p>基本配置</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-yml" data-lang="yml">#spring security
+security.basic.enabled: false
+base:
+    springsecurity:
+      csrf: disable
+      cors: disable
+      frameOptions: disabled   #disabled,deny,sameOrigin
+      csrf: disable
+      cors: enable
+      corsConfig:
+        allowCredentials: true # true or false
+        allowedOrigins:  '*'  # * or http://localhost:8080
+        allowedHeaders:  '*'  #
+        allowedMethods:  '*' # GET,POST or *
+        corsPath: /**
+      headers:
+        - {Access-Control-Expose-Headers: WWW-Authenticate,Authorization,Set-Cookie,X-Frame-Options}
+        - {Access-Control-Max-Age: 3600}
+      ajaxHeader: X-Requested-With
+      password:
+        encodeHashAsBase64: false
+        algorithm: bcrypt # bcrypt,pbkdf2,SHA-512,SHA-384,SHA-256,SHA-224,SHA-1,MD5,MD2
+      securityConfigType :  Requestmap
+      userLookup:
+        userDomainClassName: org.yunchen.gb.example.demo.domain.core.BaseUser
+        authorityJoinClassName: org.yunchen.gb.example.demo.domain.core.BaseUserBaseRole
+      authority.className: org.yunchen.gb.example.demo.domain.core.BaseRole
+      requestMap.className: org.yunchen.gb.example.demo.domain.core.Requestmap
+      apf:     #/** authenticationProcessingFilter */
+        filterProcessesUrl: /login/authenticate
+      auth:
+        loginFormUrl: /login/auth
+        alreadyLogin: /login/alreadyLogin #注释此行，则不再做当前session是否登录检查
+        useForward: false
+      adh:     #/*accessDeniedHandler*/
+        errorPage: /login/denied
+        ajaxErrorPage: /login/ajaxDenied
+        useForward: true
+      failureHandler:
+        defaultFailureUrl: /login/authfail
+        defaultAjaxFailureUrl: /login/authajaxfail
+      successHandler:
+        defaultTargetUrl: /workspace/index  #登录成功后，若没有rediretUrl则引导进此url
+        ajaxSuccessUrl: /login/ajaxSuccess
+        #如注释systemloginRecord 则不进行登录日志记录
+        systemloginRecord: org.yunchen.gb.example.demo.domain.core.SystemLoginRecord
+      logout:
+        afterLogoutUrl: /
+        filterProcessesUrl: /logoff
+      sessionAuthenticationStrategy:
+        maximumSessions: 1  #//-1 为不限,1为只可登录一个用户实例   不可为0
+        maxSessionsPreventsLogin: false  #// true 为后登陆用户异常，false 为先登陆用户被踢出
+        expiredUrl: /login/concurrentSession</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="内置安全domain类">内置安全domain类</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>增加domain类5个，增加controller类及相关页面</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
+<col style="width: 50%;">
+<col style="width: 50%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">分类</th>
-<th class="tableblock halign-left valign-top">推荐</th>
-<th class="tableblock halign-left valign-top">说明</th>
+<th class="tableblock halign-left valign-top">name</th>
+<th class="tableblock halign-left valign-top">描述</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">开发工具</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">idea intellij</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BaseRole</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">角色</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">构建工具</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">gradle</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BaseUser</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">用户</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">代码管理</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">git</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BaseUserBaseRole</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">用户角色映射</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">开发语言</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Requestmap</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">访问控制</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">制品类型</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">docker</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CI/CD</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">jenkins</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">配置文件类型</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">*.yml</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SystemLoginRecord</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">登录日志</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 <div class="sect1">
-<h2 id="基本组件">基本组件</h2>
+<h2 id="开发规约">开发规约</h2>
 <div class="sectionbody">
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
+<div class="paragraph">
+<p>使用系统封装的GbSpringSecurityUtils类或GbSpringSecurityService类获取登录用户信息。
+因为用户domain中的外键懒加载原因，不建议将domain实例存储进session中.</p>
+</div>
+<div class="sect2">
+<h3 id="初始数据">初始数据</h3>
+<div class="paragraph">
+<p>在系统的startup类的init方法中，默认有幂等的几个初始数据的方法。</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>createDefaultRoles(); //初始化系统角色
+createDefaultUsers();//初始化系统用户
+createRequestMap();//初始化系统访问控制列表
+initMenu();//初始化系统菜单</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="登录事件">登录事件</h3>
+<div class="paragraph">
+<p>发生系统登录事件时，会自动调用在startup类的onAuthenticationSuccess方法或onAuthenticationFailure方法，从而实现登录日志记录.</p>
+</div>
+<div class="paragraph">
+<p>示例如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication){
+        //保存入登录日志
+        Map map=[:];
+        String username=authentication.getPrincipal().username;
+        map.remoteaddr=request.getRemoteAddr();
+        map.sessionId=request.getSession().getId();
+        map.loginTime=new Date();
+        Timer timer=new Timer();
+        //100毫秒后分离线程执行
+        timer.runAfter(100){
+            SystemLoginRecord.withNewSession{
+                SystemLoginRecord systemLoginRecord=new SystemLoginRecord(map);
+                systemLoginRecord.baseUser=BaseUser.findByUsername(username);
+                systemLoginRecord.save(flush:true);
+            }
+        }
+    }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="获取当前登录用户">获取当前登录用户</h3>
+<div class="paragraph">
+<p>使用注入的gbSpringSecurityService获取当前登录用户:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>BaseUser currentUser=BaseUser.read(gbSpringSecurityService.principal.id);</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="当前用户鉴权操作">当前用户鉴权操作</h3>
+<div class="paragraph">
+<p>使用GbSpringSecurityUtils类进行用户权限鉴别.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>println GbSpringSecurityUtils.getPrincipalAuthorities();
+println GbSpringSecurityUtils.ifAnyGranted("ROLE_USER,ROLE_ADMIN");
+println GbSpringSecurityUtils.ifAllGranted("ROLE_USER,ROLE_ADMIN");
+println GbSpringSecurityUtils.ifNotGranted("ROLE_USER,ROLE_ADMIN");</pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="controller中">controller中</h4>
+<div class="paragraph">
+<p>使用注入的sessionRegistry获取当前登录系统的用户数目。</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>println sessionRegistry.allPrincipals*.username;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>详细的演示在WorkspaceController.groovy和LogoutController中。</p>
+</div>
+<div class="paragraph">
+<p>同时在线用户数目，有application.yml中的sessionAuthenticationStrategy部分的配置决定.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>gb:
+    springsecurity:
+      sessionAuthenticationStrategy:
+        maximumSessions: 1  #//-1 为不限,1为只可登录一个用户实例   不可为0
+        maxSessionsPreventsLogin: false  #// true 为后登陆用户异常，false 为先登陆用户session过期
+        expiredUrl: /login/concurrentSession  #为先登陆用户session过期，引导至此路径</pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="页面中">页面中</h4>
+<div class="paragraph">
+<p>参看themyleaf3页面的示例</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="提供辅助类">提供辅助类</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>提供辅助类：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">GbSpringSecurityUtils类
+静态方法
+    ifAllGranted(String roles)    当前用户是否全部授予角色
+    ifNotGranted(String roles)   当前用户是否全部未授予角色
+    ifAnyGranted(String roles)   当前用户是否授予其中任一角色
+    isAjax(HttpServletRequest request)   当前是否ajax请求
+    reauthenticate(String username, String password)  重新认证
+    PasswordEncoder findPasswordEncoder(String algorithm)  //获取指定算法的PasswordEncoder
+GbSpringSecurityService类
+需要使用@Autowired 注入
+    getPrincipal()        获取当前登录principal ，匿名用户为字符串 anonymous
+    注意：登录用户为 org.yunchen.gb.plugin.springsecurity.userdetails.CoreUser 的实例
+    getCurrentUser()   获取当前用户实例 （BaseUser）
+    encodePassword(String password)
+    encodePassword(String password, Object salt = null)
+    isLoggedIn()
+    clearCachedRequestmaps()   清除当前缓存的访问控制列表
+    PasswordEncoder findPasswordEncoder(String algorithm)  //获取指定算法的PasswordEncoder
+thmeleaf taglib
+    1. 页面&lt;xmlns:sec="http://www.thymeleaf.org/extras/spring-security"&gt;
+    2. 获取用户信息&lt;span  sec:authentication="principal.username" /&gt;
+    3. 角色鉴别 &lt;div  sec:authorize="hasAnyRole('ROLE_ADMIN')"&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="启用cors的处理">启用cors的处理</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>若其他域名的应用系统使用本系统的rest接口,出现跨域无法访问的403 错误时,按如下操作:</p>
+</div>
+<div class="paragraph">
+<p>修改application.yml中的 cors值为 enable</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-yml" data-lang="yml">gb:
+    springsecurity:
+      active: true
+      frameOptions: sameOrigin   #disabled,deny,sameOrigin
+      csrf: disable
+      cors: enable
+      corsConfig:
+        allowCredentials: true # true or false
+        allowedOrigins:  '*'  # * or http://localhost:8080,http://somesite.com.cn
+        allowedHeaders:  '*'  #
+        allowedMethods:  '*' # GET,POST or *
+        corsPath: /**</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="jsr250-与-requestmap混合工作">jsr250 与 requestmap混合工作</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="配置securityconfig类">配置SecurityConfig类</h3>
+<div class="paragraph">
+<p>在config目录创建ProjectSecurityConfig类</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>import org.springframework.boot.autoconfigure.EnableAutoConfiguration
+import org.springframework.context.annotation.Configuration
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+
+@Configuration
+@EnableAutoConfiguration
+//@EnableGlobalMethodSecurity(securedEnabled=true)
+@EnableGlobalMethodSecurity(jsr250Enabled=true)
+class ProjectSecurityConfig extends WebSecurityConfigurerAdapter{
+}</pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
 <tr>
-<th class="tableblock halign-left valign-top">名称</th>
-<th class="tableblock halign-left valign-top">介绍</th>
-<th class="tableblock halign-left valign-top">说明</th>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+也可启用securedEnabled ,就可在项目中使用@Secured注解
+</td>
 </tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">核心组件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="core.html">core-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全组件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity.html">plugin-springsecurity-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">缓存组件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="cache.html">plugin-cache-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">redis组件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="redis.html">plugin-redis-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全rest插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-rest.html">plugin-springsecurity-rest-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全rest-db插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-rest-db.html">plugin-springsecurity-rest-db-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全rest-redis插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-rest-redis.html">plugin-springsecurity-rest-redis-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全camunda插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-camunda.html">plugin-springsecurity-camunda-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">安全websocket插件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="springsecurity-websocket.html">plugin-springsecurity-websocket-starter</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-</tbody>
 </table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+jsr250Enabled 可以使用@PermitAll,@RolesAllowed,@DenyAll 三个注解
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="在controller类中使用">在controller类中使用</h3>
+<div class="listingblock">
+<div class="content">
+<pre>    //@Secured("ROLE_ADMIN")
+    //@PermitAll
+    //@RolesAllowed("ROLE_USER,ROLE_ADMIN")
+    @DenyAll
+    public Map index2(){
+        return [result:true]
+    }</pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+目前方法上的@PermitAll注解无法工作, 需要修改在requestMap表中最后一行, /** 配置为 permitAll
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="国密算法支持">国密算法支持</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>增加国密算法SM3，SM4的支持</p>
+</div>
+<div class="sect2">
+<h3 id="修改application-yml文件">修改application.yml文件</h3>
+<div class="listingblock">
+<div class="content">
+<pre>gb:
+    springsecurity:
+      password:
+        encodeHashAsBase64: false
+        algorithm: SM3 # bcrypt,pbkdf2,SHA-512,SHA-384,SHA-256,SHA-224,SHA-1,MD5,MD2,SM3,SM4
+        sm4Key: 86C63180C2806ED1F47B859EE501215C</pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+sm4Key也可不设置，则会默认使用内置的32位16进制密钥。
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>加密后的效果</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>admin:{SM3}dc1fd00e3eeeb940ff46f457bf97d66ba7fcc36e0b20802383de142860e76ae6
+user:{SM3}92e7fbdcca8b9f36be0638e48e77cbeeb49ef15886b6cd12d46e09d74a232a81</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>TIP:其中的{idForEncode} 是springsecurity的DelegatingPasswordEncoder类添加的，后面是加密后的字符</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="配置自定义算法">配置自定义算法</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>在项目中存在使用用户id作为盐值的情况，要支持此种情况需要如下配置</p>
+</div>
+<div class="sect2">
+<h3 id="配置applicaiton-yml">配置applicaiton.yml</h3>
+<div class="listingblock">
+<div class="content">
+<pre>gb:
+  springsecurity:
+    password:
+      encodeHashAsBase64: false
+      algorithm: custom # bcrypt,pbkdf2,SHA-512,SHA-384,SHA-256,SHA-224,SHA-1,MD5,MD2,SM3,SM4,custom   <i class="conum" data-value="1"></i><b>(1)</b>
+      useCustomMethodAlgorithm: bcrypt    <i class="conum" data-value="2"></i><b>(2)</b></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>配置此项为custom ，在系统中使用CustomPasswordEncoder</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>配置一个辅助的算法encoder，可为上一项除去custom外的任意值</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="添加encoder回调方法">添加encoder回调方法</h3>
+<div class="paragraph">
+<p>在任何标有@GbBootstrap注解的类中，如Startup类，添加如下方法</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>    public String customPasswordEncoder(CoreUser currentLoadUser, PasswordEncoder passwordEncoder,CharSequence plainTextPassword){
+        //passwordEncoder 是useCustomMethodAlgorithm配置项制定的算法加密器
+        String encodeStr=passwordEncoder.encode(plainTextPassword)
+        return encodeStr;
+        //因spring security5后不再使用salt，可以自己定制盐值加密类，以便与遗留系统集成
+        //return Md5Encoder.encode(plainTextPassword,currentLoadUser.id);
+    }</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="添加matches回调方法">添加matches回调方法</h3>
+<div class="paragraph">
+<p>在任何标有@GbBootstrap注解的类中，如Startup类，添加如下方法</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>    public boolean customPasswordMatches(CoreUser currentLoadUser, PasswordEncoder passwordEncoder,CharSequence rawPassword, String encodedPassword){
+        //passwordEncoder 是useCustomMethodAlgorithm配置项制定的算法加密器
+        return passwordEncoder.matches(rawPassword,encodedPassword)
+        //因spring security5后不再使用salt，可以自己定制盐值加密类，以便与遗留系统集成
+        //return Md5Encoder.encode(rawPassword,currentLoadUser.id).equals(encodedPassword);
+    }</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="配置去掉加密后的算法标识">配置去掉加密后的算法标识</h3>
+<div class="paragraph">
+<p>spring security5后，加密的字符串前面会自动添加算法标识{math}，如{bcrypt}$2a$10$e8zurQgiO8s5O6rYwMUF..XapBU1WqWi8fmZ895z4lnW8QliEDWYW</p>
+</div>
+<div class="paragraph">
+<p>可以在application.yml中添加如下配置，去除算法标识，以便与遗留系统集成</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>gb:
+  springsecurity:
+    password:
+        withoutIdPrefix: true</pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+携带算法标识是一个很好的习惯，不推荐将其摘除。可以采用中间视图的形式绕开标识问题与遗留系统集成。
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="修改系统的密码加密">修改系统的密码加密</h3>
+<div class="paragraph">
+<p>系统中的用户密码加密在BaseUser 类中</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>class BaseUser implements Serializable {
+    。。。。。。
+    protected void encodePassword() {
+        CoreUser coreUser=new CoreUser(username, password, enabled, !accountExpired, !passwordExpired, !accountLocked, [], id)
+        password = GbSpringUtils.getBean("passwordEncoder").encode(coreUser,password)
+    }
+}</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="配置验证时自定义加载用户">配置验证时自定义加载用户</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>在实际项目中有支持自定义字段匹配用户名的需求，如手机号，邮箱等。</p>
+</div>
+<div class="sect2">
+<h3 id="配置applicaiton-yml-2">配置applicaiton.yml</h3>
+<div class="listingblock">
+<div class="content">
+<pre>gb:
+  springsecurity:
+        password:
+          useCustomLoadUser: true</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="添加loaduser回调方法">添加loaduser回调方法</h3>
+<div class="paragraph">
+<p>在任何标有@GbBootstrap注解的类中，如Startup类，添加如下方法</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>    public BaseUser customLoadUser(String inputUsername){
+    //示例，可自由定制，返回BaseUser实例对象即可
+        return BaseUser.findByUsernameOrEmailOrPhone(inputUsername,inputUsername,inputUsername);
+    }</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="安全事件">安全事件</h3>
+<div class="paragraph">
+<p>安全事件AppSecurityAuthSuccessEvent、AppSecurityAuthFailureEvent和安全事件基类AppSecurityEvent；
+获取AppSecurityAuthSuccessEvent事件的source是一个Map，内容是：[request:request,response:response,authentication:authentication]
+获取AppSecurityAuthFailureEvent事件的source是一个Map，内容是：[request:request,response:response,authenticationException:authenticationException]</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+若订阅安全基类AppSecurityEvent事件，则能收到全部框架发布的安全事件。
+authenticationException 是AccountExpiredException、CredentialsExpiredException、 DisabledException、
+LockedException、 SessionAuthenticationException、 CaptchaVerificationFailedException六类异常中的一个。
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>订阅示例：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">@Configuration
+@Slf4j
+class NewSecurityAuthSuccessAppListener implements ApplicationListener&lt;AppSecurityAuthSuccessEvent&gt; {
+    @Override
+    void onApplicationEvent(AppSecurityAuthSuccessEvent event) {
+        println "login user is : ${event.source.authentication.principal.username}";
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="横向扩展">横向扩展</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>提供session复制，jwt存储认证的横向扩展能力;支持cookie存储认证信息的横向扩展能力。</p>
+</div>
+<div class="sect2">
+<h3 id="session复制">session复制</h3>
+<div class="paragraph">
+<p>使用redis进行session复制</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="jwt方案">JWT方案</h3>
+<div class="paragraph">
+<p>参看 <a href="./springSecurityRest.html"> Spring Security REST 解决方案</a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cookie存储">cookie存储</h3>
+<div class="paragraph">
+<p>考虑到使用传统mvc方案的用户，在升级到jwt时，需要前端使用MVVM框架或VUE，成本较高。
+因此针对传统mvc模式，提供此cookie存储方案，快速解决横向扩展，减少代码复杂度和迁移成本。</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+需要客户端浏览器开启cookie支持
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="使用步骤">使用步骤</h4>
+<div class="paragraph">
+<p>在application.yml中增加配置</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>gb:
+   springsecurity:
+    scale:
+      enableCookie: true #使用cookie存储认证信息
+      httpOnly: true #不允许客户端js读取
+      secure: false #只支持https协议
+      tokenValiditySeconds: 1209600 # 14 days
+      domainName:         #cookie域名，为空或不设置则使用访问路径localhost或IP</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>经过以上两步后，系统用户登录后，会自动将认证信息写入浏览器cookie; 无论是服务端重启或多服务轮询，都会优先检验cookie，再检验sessionId.</p>
+</div>
+<div class="paragraph">
+<p>用户在系统中，主动登出/logout/index 或访问/logoff 时 或关闭浏览器时，系统都会自动清除cookie.</p>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0-SNAPSHOT<br>
-Last updated 2023-07-09 23:07:45 +0800
+Last updated 2023-07-10 23:04:48 +0800
 </div>
 </div>
 </body>
