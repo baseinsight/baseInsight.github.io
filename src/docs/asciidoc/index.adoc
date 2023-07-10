@@ -11,3 +11,31 @@ author: 肖鹏 <13910818313@163.com>
 
 为避免重复发明轮子，以集成成型的优质的开源框架为主要模式，采用微内核、多插件的形式，提供对业务场景的支持。
 系统由内核core系统包和多个springboot-start构成一个完备的项目示例工程，辅以完备的在线文档（markdown或adoc）来指引开发人员。
+
+[format="csv", options="header"]
+|===
+分类,推荐,说明
+开发工具,idea intellij,
+构建工具,gradle,
+代码管理,git,
+开发语言,java,
+制品类型,docker,
+CI/CD,jenkins,
+配置文件类型,*.yml,
+|===
+
+== 基本组件
+
+[format="csv", options="header"]
+|===
+名称,介绍,说明
+核心组件,link:core.html[core-starter],
+安全组件,link:springsecurity.html[plugin-springsecurity-starter],
+缓存组件,link:cache.html[plugin-cache-starter],
+redis组件,link:redis.html[plugin-redis-starter],
+安全rest插件,link:springsecurity-rest.html[plugin-springsecurity-rest-starter],
+安全rest-db插件,link:springsecurity-rest-db.html[plugin-springsecurity-rest-db-starter],
+安全rest-redis插件,link:springsecurity-rest-redis.html[plugin-springsecurity-rest-redis-starter],
+安全camunda插件,link:springsecurity-camunda.html[plugin-springsecurity-camunda-starter],
+安全websocket插件,link:springsecurity-websocket.html[plugin-springsecurity-websocket-starter],
+|===
