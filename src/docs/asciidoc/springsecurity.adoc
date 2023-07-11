@@ -27,6 +27,11 @@ gradle中
 ----
     implementation('io.github.baseinsight:plugin-springsecurity-starter:x.x.x-SNAPSHOT')
 ----
+
+=== 代码
+
+因为JPA需要的entity、repository类等需要根据项目来具体定制，因此可下载link:./images/demo-code.zip[示例基础代码]来了解。
+
 [[描述]]
 == 描述
 
