@@ -29,6 +29,223 @@ gradle中
     implementation('io.github.baseinsight:plugin-springsecurity-camunda-starter:x.x.x-SNAPSHOT')
 ----
 
+=== 编写基础工作流安全回调类
+
+因为项目的安全entity类是根据项目变化的，因此需要在工程中创建CamundaIdentityComponent类，并实现CamundaIdentityInterface接口的所有方法。
+
+[source,java]
+----
+// camunda工作流的组件实现类，将工作流的用户及组的查询类库与本地应用的表格结合
+@Component
+public class CamundaIdentityComponent implements CamundaIdentityInterface {
+    @Autowired
+    TenantRepository tenantRepository;
+    @Autowired
+    BaseRoleRepository baseRoleRepository;
+    @Autowired
+    BaseUserRepository baseUserRepository;
+    @Autowired
+    BaseUserBaseRoleRepository baseUserBaseRoleRepository;
+    @Override
+    public Tenant findTenantById(String id) {
+        return tenantRepository.findById(id);
+    }
+
+    @Override
+    public Group findGroupById(String id) {
+        return baseRoleRepository.findBaseRoleById(id);
+    }
+
+    @Override
+    public long countGroupByQueryCriteria(CustomGroupQuery customGroupQuery) {
+        String roleId=customGroupQuery.getId();
+        String[] roleIds=customGroupQuery.getIds();
+        String tenantId=customGroupQuery.getTenantId();
+        Map<String, String> expressions=customGroupQuery.getExpressions();
+        String roleName=customGroupQuery.getName();
+        String roleType=customGroupQuery.getType();
+        String roleNameLike=customGroupQuery.getNameLike();
+        List<QueryOrderingProperty> queryOrderingProperties=customGroupQuery.getOrderingProperties();
+        Specification<BaseRole> baseRoleSpecification = (Root<BaseRole> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if(roleId!=null){
+                predicates.add(cb.equal(root.get("id"),roleId));
+            }
+            if(roleIds!=null && roleIds.length>0){
+                predicates.add(cb.in(root.get("id")).value(roleIds));
+            }
+            if(tenantId!=null){
+                //@todo 目前baseRole与tenant未建立关联
+                //Tenant tenant=tenantRepository.findById(tenantId);
+                //predicates.add(cb.equal(root.get("tenant"),tenant));
+            }
+            if(roleName!=null){
+                predicates.add(cb.equal(root.get("name"),roleName));
+            }
+            if(roleNameLike!=null){
+                predicates.add(cb.like(root.get("name"),roleName+"%"));
+            }
+            if(roleType!=null){
+                predicates.add(cb.equal(root.get("type"),roleType));
+            }
+            return query.where(predicates.toArray(new Predicate[predicates.size()])).getRestriction();
+        };
+        return baseRoleRepository.count(baseRoleSpecification);
+    }
+
+    @Override
+    public List<Group> findAllGroupByQueryCriteria(CustomGroupQuery customGroupQuery) {
+        List<BaseRole> list;
+        String roleId=customGroupQuery.getId();
+        String[] roleIds=customGroupQuery.getIds();
+        String tenantId=customGroupQuery.getTenantId();
+        Map<String, String> expressions=customGroupQuery.getExpressions();
+        String roleName=customGroupQuery.getName();
+        String roleType=customGroupQuery.getType();
+        String roleNameLike=customGroupQuery.getNameLike();
+        List<QueryOrderingProperty> queryOrderingProperties=customGroupQuery.getOrderingProperties();
+        Specification<BaseRole> baseRoleSpecification = (Root<BaseRole> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if(roleId!=null){
+                predicates.add(cb.equal(root.get("id"),roleId));
+            }
+            if(roleIds!=null && roleIds.length>0){
+                predicates.add(cb.in(root.get("id")).value(roleIds));
+            }
+            if(tenantId!=null){
+                //@todo 目前baseRole与tenant未建立关联
+                //Tenant tenant=tenantRepository.findById(tenantId);
+                //predicates.add(cb.equal(root.get("tenant"),tenant));
+            }
+            if(roleName!=null){
+                predicates.add(cb.equal(root.get("name"),roleName));
+            }
+            if(roleNameLike!=null){
+                predicates.add(cb.like(root.get("name"),roleName+"%"));
+            }
+            if(roleType!=null){
+                predicates.add(cb.equal(root.get("type"),roleType));
+            }
+
+            return query.where(predicates.toArray(new Predicate[predicates.size()])).getRestriction();
+        };
+        if(queryOrderingProperties!=null && queryOrderingProperties.size()>0){
+            List<Sort.Order> orders=new ArrayList<>();
+            queryOrderingProperties.forEach(queryOrderingProperty -> {
+                Sort.Direction direction=Sort.Direction.ASC;
+                if(queryOrderingProperty.getDirection().getName().toLowerCase().equals("asc")){
+
+                }
+                if(queryOrderingProperty.getDirection().getName().toLowerCase().equals("desc")){
+                    direction=Sort.Direction.DESC;
+                }
+                orders.add(new Sort.Order(direction,queryOrderingProperty.getQueryProperty().getName()));
+            });
+            list=baseRoleRepository.findAll(baseRoleSpecification,Sort.by(orders));
+        }else{
+            list=baseRoleRepository.findAll(baseRoleSpecification);
+        }
+        List<Group> rlist=new ArrayList<>();
+        for(BaseRole one:list){
+            rlist.add(one);
+        }
+        return rlist;
+    }
+
+    @Override
+    public User findUserById(String id) {
+        return baseUserRepository.findById(id);
+    }
+
+    @Override
+    public long countUserByQueryCriteria(CustomUserQuery query) {
+        return 0;
+    }
+
+    @Override
+    public List<User> findAllUserByQueryCriteria(CustomUserQuery customUserQuery) {
+        List<BaseUser> list;
+        String userId=customUserQuery.getId();
+        String[] userIds=customUserQuery.getIds();
+        String tenantId=customUserQuery.getTenantId();
+        Map<String, String> expressions=customUserQuery.getExpressions();
+        String firstName=customUserQuery.getFirstName();
+        String firstNameLike=customUserQuery.getFirstNameLike();
+        String lastName=customUserQuery.getLastName();
+        String lastNameLike=customUserQuery.getLastNameLike();
+        String email=customUserQuery.getEmail();
+        String emailLike=customUserQuery.getEmailLike();
+        String roleId=customUserQuery.getGroupId();
+        List<QueryOrderingProperty> queryOrderingProperties=customUserQuery.getOrderingProperties();
+        Specification<BaseUser> baseUserSpecification = (Root<BaseUser> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if(userId!=null){
+                predicates.add(cb.equal(root.get("id"),userId));
+            }
+            if(userIds!=null && userIds.length>0){
+                predicates.add(cb.in(root.get("id")).value(userIds));
+            }
+            if(tenantId!=null){
+                Tenant tenant=tenantRepository.findById(tenantId);
+                predicates.add(cb.equal(root.get("tenant"),tenant));
+            }
+            if(firstName!=null){
+                predicates.add(cb.equal(root.get("firstName"),firstName));
+            }
+            if(firstNameLike!=null){
+                predicates.add(cb.like(root.get("firstNameLike"),firstNameLike+"%"));
+            }
+            if(lastName!=null){
+                predicates.add(cb.equal(root.get("lastName"),lastName));
+            }
+            if(lastNameLike!=null){
+                predicates.add(cb.like(root.get("lastNameLike"),lastNameLike+"%"));
+            }
+            if(email!=null){
+                predicates.add(cb.equal(root.get("email"),email));
+            }
+            if(emailLike!=null){
+                predicates.add(cb.like(root.get("emailLike"),emailLike+"%"));
+            }
+            if(roleId!=null){
+                List<BaseUserBaseRole> baseUserBaseRoles=baseUserBaseRoleRepository.findAllByBaseRoleId(roleId);
+                String[] newUserIds = new String[0];
+                if(baseUserBaseRoles!=null && baseUserBaseRoles.size()>0){
+                    newUserIds= new String[baseUserBaseRoles.size()];
+                    for(int i=0;i<baseUserBaseRoles.size();i++){
+                        newUserIds[i]=baseUserBaseRoles.get(i).getBaseUser().getId();
+                    }
+                }
+                predicates.add(cb.in(root.get("id")).value(newUserIds));
+            }
+            return query.where(predicates.toArray(new Predicate[predicates.size()])).getRestriction();
+        };
+        if(queryOrderingProperties!=null && queryOrderingProperties.size()>0){
+            List<Sort.Order> orders=new ArrayList<>();
+            queryOrderingProperties.forEach(queryOrderingProperty -> {
+                Sort.Direction direction=Sort.Direction.ASC;
+                if(queryOrderingProperty.getDirection().getName().toLowerCase().equals("asc")){
+
+                }
+                if(queryOrderingProperty.getDirection().getName().toLowerCase().equals("desc")){
+                    direction=Sort.Direction.DESC;
+                }
+                orders.add(new Sort.Order(direction,queryOrderingProperty.getQueryProperty().getName()));
+            });
+            list=baseUserRepository.findAll(baseUserSpecification,Sort.by(orders));
+        }else{
+            list=baseUserRepository.findAll(baseUserSpecification);
+        }
+        List<User> rlist=new ArrayList<>();
+        for(BaseUser one:list){
+            rlist.add(one);
+        }
+        return rlist;
+    }
+}
+
+----
+
 
 == 日志跟踪
 

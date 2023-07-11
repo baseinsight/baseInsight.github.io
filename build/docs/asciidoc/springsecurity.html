@@ -458,6 +458,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#描述">描述</a></li>
 <li><a href="#内置安全entity类">内置安全entity类</a></li>
+<li><a href="#编写核心安全回调类">编写核心安全回调类</a></li>
 <li><a href="#开发规约">开发规约</a>
 <ul class="sectlevel2">
 <li><a href="#初始数据">初始数据</a></li>
@@ -568,6 +569,69 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="编写核心安全回调类">编写核心安全回调类</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>因为项目的安全entity类是根据项目变化的，因此需要在工程中创建CoreSecurityComponent类，并实现CoreSecurityOperater接口的所有方法。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">// springsecurity的组件实现类，将安全的的查询类库与本地应用的表格结合
+@Component
+public class CoreSecurityComponent implements CoreSecurityOperater {
+    @Autowired
+    RequestmapRepository requestmapRepository;
+    @Autowired
+    BaseUserRepository baseUserRepository;
+    @Autowired
+    BaseUserBaseRoleRepository baseUserBaseRoleRepository;
+    @Autowired
+    BaseRolePrivilegeRepository baseRolePrivilegeRepository;
+    @Override
+    public Object findUserByUsername(String username) {
+        return baseUserRepository.findByUsername(username);
+    }
+
+    @Override
+    public Object findUserById(Object id) {
+        return baseUserRepository.findById((String)id);
+    }
+
+    @Override
+    public List findAllUserAuthorities(Object user) {
+        List&lt;String&gt; roleNameList= new ArrayList&lt;String&gt;();
+        List&lt;BaseUserBaseRole&gt; list=baseUserBaseRoleRepository.findAllByBaseUserId(((BaseUser)user).getId());
+        list.forEach(baseUserBaseRole-&gt;{
+            roleNameList.add(baseUserBaseRole.getBaseRole().getAuthority());
+        });
+        return roleNameList;
+    }
+
+    @Override
+    public List findAllUserPrivileges(List&lt;String&gt; roleNames) {
+        List&lt;String&gt; privilegeNameList= new ArrayList&lt;String&gt;();
+        List&lt;BaseRolePrivilege&gt; list=baseRolePrivilegeRepository.findAllByBaseRoleIdIn(roleNames);
+        list.forEach(baseRolePrivilege-&gt;{
+            privilegeNameList.add(baseRolePrivilege.getPrivilege().getName());
+        });
+        return privilegeNameList;
+    }
+
+    @Override
+    public List findAllRequestmaps() {
+        return requestmapRepository.findAll(Sort.by(Sort.Direction.ASC,"id"));
+    }
+
+    @Override
+    public List findAllRequestmapsByRoleName(String roleName) {
+        return requestmapRepository.findAllByConfigAttributeLike(roleName);
+    }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -913,7 +977,7 @@ base:
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0-SNAPSHOT<br>
-Last updated 2023-07-11 15:33:35 +0800
+Last updated 2023-07-11 16:06:06 +0800
 </div>
 </div>
 </body>

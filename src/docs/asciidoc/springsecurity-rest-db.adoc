@@ -185,6 +185,54 @@ public class AuthenticationToken {
 
 ----
 
+=== 配置db token的回调类
+
+因为项目的token entity类是根据项目变化的，因此需要在工程中创建DbTokenComponent类，并实现DbTokenInterface接口的所有方法。
+
+[source,java]
+----
+// token的db存储的组件实现类，将类库与本地应用的表格结合
+@Component
+public class DbTokenComponent implements DbTokenInterface {
+    @Autowired
+    AuthenticationTokenRepository authenticationTokenRepository;
+    @Override
+    public Object findExistingToken(String tokenValue, UserDetailsService userDetailsService) {
+       return authenticationTokenRepository.findByTokenValue(tokenValue);
+    }
+
+    @Override
+    public void removeToken(String tokenValue) throws TokenNotFoundException {
+        authenticationTokenRepository.deleteByTokenValue(tokenValue);
+    }
+
+    @Override
+    public void storeToken(String tokenValue, UserDetails principal) {
+        AuthenticationToken authenticationToken=new AuthenticationToken();
+        authenticationToken.setTokenValue(tokenValue);
+        authenticationToken.setUsername(principal.getUsername());
+        authenticationTokenRepository.saveAndFlush(authenticationToken);
+    }
+
+    @Override
+    public UserDetails loadUserByToken(String tokenValue, DbRestProperties dbRestProperties, UserDetailsService userDetailsService) throws TokenNotFoundException {
+        AuthenticationToken existingToken = (AuthenticationToken)this.findExistingToken(tokenValue,userDetailsService);
+
+        if (existingToken!=null) {
+            if(dbRestProperties.getDb().isAutoAccessCount()){
+                existingToken.setAccessCount(existingToken.getAccessCount()+1);
+                authenticationTokenRepository.saveAndFlush(existingToken);
+            }
+            String username = existingToken.getUsername();
+            return userDetailsService.loadUserByUsername(username);
+        }else{
+            throw new TokenNotFoundException("Token ${tokenValue} not found");
+        }
+    }
+}
+
+----
+
 === 增加定时任务
 
 添加定时任务清除过期token, 在job目录增加RemoveStaleTokensTask类

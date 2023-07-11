@@ -48,6 +48,66 @@ Requestmap,访问控制
 SystemLoginRecord,登录日志
 |===
 
+== 编写核心安全回调类
+
+因为项目的安全entity类是根据项目变化的，因此需要在工程中创建CoreSecurityComponent类，并实现CoreSecurityOperater接口的所有方法。
+
+[source,java]
+----
+// springsecurity的组件实现类，将安全的的查询类库与本地应用的表格结合
+@Component
+public class CoreSecurityComponent implements CoreSecurityOperater {
+    @Autowired
+    RequestmapRepository requestmapRepository;
+    @Autowired
+    BaseUserRepository baseUserRepository;
+    @Autowired
+    BaseUserBaseRoleRepository baseUserBaseRoleRepository;
+    @Autowired
+    BaseRolePrivilegeRepository baseRolePrivilegeRepository;
+    @Override
+    public Object findUserByUsername(String username) {
+        return baseUserRepository.findByUsername(username);
+    }
+
+    @Override
+    public Object findUserById(Object id) {
+        return baseUserRepository.findById((String)id);
+    }
+
+    @Override
+    public List findAllUserAuthorities(Object user) {
+        List<String> roleNameList= new ArrayList<String>();
+        List<BaseUserBaseRole> list=baseUserBaseRoleRepository.findAllByBaseUserId(((BaseUser)user).getId());
+        list.forEach(baseUserBaseRole->{
+            roleNameList.add(baseUserBaseRole.getBaseRole().getAuthority());
+        });
+        return roleNameList;
+    }
+
+    @Override
+    public List findAllUserPrivileges(List<String> roleNames) {
+        List<String> privilegeNameList= new ArrayList<String>();
+        List<BaseRolePrivilege> list=baseRolePrivilegeRepository.findAllByBaseRoleIdIn(roleNames);
+        list.forEach(baseRolePrivilege->{
+            privilegeNameList.add(baseRolePrivilege.getPrivilege().getName());
+        });
+        return privilegeNameList;
+    }
+
+    @Override
+    public List findAllRequestmaps() {
+        return requestmapRepository.findAll(Sort.by(Sort.Direction.ASC,"id"));
+    }
+
+    @Override
+    public List findAllRequestmapsByRoleName(String roleName) {
+        return requestmapRepository.findAllByConfigAttributeLike(roleName);
+    }
+}
+
+----
+
 [[开发规约]]
 == 开发规约
 

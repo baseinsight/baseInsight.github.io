@@ -461,6 +461,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#apilogin返回json样式">/api/login返回json样式</a></li>
 <li><a href="#修改yml配置">修改yml配置</a></li>
 <li><a href="#增加domain类">增加domain类</a></li>
+<li><a href="#配置db-token的回调类">配置db token的回调类</a></li>
 <li><a href="#增加定时任务">增加定时任务</a></li>
 <li><a href="#token的注销apilogout">token的注销/api/logout</a></li>
 <li><a href="#不支持refreshtoken操作">不支持refreshToken操作</a></li>
@@ -708,6 +709,55 @@ public class AuthenticationToken {
 </div>
 </div>
 <div class="sect2">
+<h3 id="配置db-token的回调类">配置db token的回调类</h3>
+<div class="paragraph">
+<p>因为项目的token entity类是根据项目变化的，因此需要在工程中创建DbTokenComponent类，并实现DbTokenInterface接口的所有方法。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">// token的db存储的组件实现类，将类库与本地应用的表格结合
+@Component
+public class DbTokenComponent implements DbTokenInterface {
+    @Autowired
+    AuthenticationTokenRepository authenticationTokenRepository;
+    @Override
+    public Object findExistingToken(String tokenValue, UserDetailsService userDetailsService) {
+       return authenticationTokenRepository.findByTokenValue(tokenValue);
+    }
+
+    @Override
+    public void removeToken(String tokenValue) throws TokenNotFoundException {
+        authenticationTokenRepository.deleteByTokenValue(tokenValue);
+    }
+
+    @Override
+    public void storeToken(String tokenValue, UserDetails principal) {
+        AuthenticationToken authenticationToken=new AuthenticationToken();
+        authenticationToken.setTokenValue(tokenValue);
+        authenticationToken.setUsername(principal.getUsername());
+        authenticationTokenRepository.saveAndFlush(authenticationToken);
+    }
+
+    @Override
+    public UserDetails loadUserByToken(String tokenValue, DbRestProperties dbRestProperties, UserDetailsService userDetailsService) throws TokenNotFoundException {
+        AuthenticationToken existingToken = (AuthenticationToken)this.findExistingToken(tokenValue,userDetailsService);
+
+        if (existingToken!=null) {
+            if(dbRestProperties.getDb().isAutoAccessCount()){
+                existingToken.setAccessCount(existingToken.getAccessCount()+1);
+                authenticationTokenRepository.saveAndFlush(existingToken);
+            }
+            String username = existingToken.getUsername();
+            return userDetailsService.loadUserByUsername(username);
+        }else{
+            throw new TokenNotFoundException("Token ${tokenValue} not found");
+        }
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="增加定时任务">增加定时任务</h3>
 <div class="paragraph">
 <p>添加定时任务清除过期token, 在job目录增加RemoveStaleTokensTask类</p>
@@ -756,7 +806,7 @@ public class RemoveStaleTokensTask {
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0-SNAPSHOT<br>
-Last updated 2023-07-10 22:08:30 +0800
+Last updated 2023-07-11 16:07:09 +0800
 </div>
 </div>
 </body>
