@@ -162,4 +162,4 @@ web-app\WEB-INF\jsp\camundaForm\${流程名称}\_xxx.jsp
 
 ==== 创建流程节点的jsp页面
 
-为每个流程节点画jsp页面
+为每个流程节点画页面

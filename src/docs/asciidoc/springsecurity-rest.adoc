@@ -12,9 +12,9 @@
 
 默认提供基于api的login,logout,validate等认证功能,oauth的refresh token功能,
 但因为默认的jwt引擎是stateless,服务器并未存储token,因此并提供logout功能.
-可在springsecurity-rest-gorm , springsecurity-rest-redis等插件中使用logout功能.
+可在springsecurity-rest-db , springsecurity-rest-redis等插件中使用logout功能.
 
-本插件可以与 GbRestController注解一起使用.
+本插件可以与 FullRestController注解一起使用.
 
 [[版本历史]]
 
@@ -35,69 +35,6 @@ gradle中
 ----
 
 
-[[描述]]
-== 描述
-
-=== yml配置
-
-[source,yml]
-----
-gb:
-    rest:
-      prefix: /api
-      unifiedJsonResult: true
-    springsecurity:
-      rest:
-        active: true
-        jsSpaCombine: true  #启用vue等js框架打包后合并发布
-        jsPathPrefix:       #js框架的router前缀列表
-          - /vue
-        jsRewritePath: /index.html  #js框架的入口地址
-        login:
-          active: true
-          endpointUrl: /api/login
-          usernamePropertyName: username
-          passwordPropertyName: password
-          failureStatusCode: 401  # HttpServletResponse.SC_UNAUTHORIZED
-          useJsonCredentials: true
-          useRequestParamsCredentials: false
-        logout:
-          endpointUrl: /api/logout
-        token:
-          generation:
-            stopSupportRefresh: false
-            useSecureRandom: true
-            useUUID: false
-            jwt:
-              issuer: Spring Security REST Plugin
-              algorithm: HS256
-              jweAlgorithm: RSA-OAEP
-              encryptionMethod: A128GCM
-              userDetaisClaims:                   //从1.3.1版本后支持，下面为增加的字段信息
-                - id:id                           //在jwt 中增加id的项，值为userDetails类的id属性
-                - password:password
-          storage:
-            useJwt: true
-            jwt:
-              useSignedJwt: true
-              useEncryptedJwt: false
-              privateKeyPath: /home/.priavte
-              publicKeyPath: /home/.public
-              secret: gb-atlease256bits(The secret length must be at least 256 bits) #32个字符以上
-              expiration: 3600
-          validation:
-            active: true
-            headerName: X-Auth-Token
-            endpointUrl:  /api/validate
-            tokenHeaderMissingStatusCode: 401   #HttpServletResponse.SC_UNAUTHORIZED
-            enableAnonymousAccess: false
-            useBearerToken: true
-          rendering:
-            usernamePropertyName: username
-            tokenPropertyName: access_token
-            authoritiesPropertyName:  roles
-----
-
 === Requestmap 设置
 
 在starup的createRequestMap方法中增加对oauth地址的控制.
@@ -106,14 +43,9 @@ gb:
             ......
             new Requestmap(name:'oauth管理',url: '/oauth/**', configAttribute: "permitAll").save(flush: true);
             ......
-            new Requestmap(name:'/**管理',url: '/**', configAttribute: 'isFullyAuthenticated()').save(flush: true);
 ----
 
 到此设置完成.
-
-=== cors 处理
-
-参见spring security 插件中的 link:springSecurity.html#_启用cors的处理[cors 设置描述]
 
 === jwt辅助类
 
@@ -207,14 +139,14 @@ Pragma
 build.gradle中配置使用
 
 ----
-implementation('org.yunchen.gb:gb-plugin-springsecurity:1.3.1.0')
-implementation('org.yunchen.gb:gb-plugin-springsecurity-rest:1.3.1.0')
+    implementation('io.github.baseinsight:plugin-springsecurity-starter:x.x.x-SNAPSHOT')
+    implementation('io.github.baseinsight:plugin-springsecurity-rest-starter:x.x.x-SNAPSHOT')
 ----
 
 application.yml中配置
 
 ----
-gb:
+base:
     springsecurity:
         headers:
           - {Access-Control-Expose-Headers: WWW-Authenticate,Authorization,Set-Cookie,X-Frame-Options} <1>
@@ -296,7 +228,7 @@ Content-Type: application/json
 
 === 登录
 
-登录功能的地址配置在application.yml中gb.springsecurity.rest.login.endpointUrl,默认是/api/login ,可视项目情况修改为其他路径
+登录功能的地址配置在application.yml中base.springsecurity.rest.login.endpointUrl,默认是/api/login ,可视项目情况修改为其他路径
 [source,json]
 ----
 在postman中选择post至地址 http://localhost:8080/api/login
@@ -325,9 +257,9 @@ TIP: 目前插件实现的refresh_token没有过期时间限制,会一直有效,
 
 === 访问安全防护的接口
 
-现在我们使用token访问在requestmap中标明安全防护的rest接口,此处使用 /user/json 示例 (配置为ROLE_ADMIN角色可访问)
+现在我们使用token访问在requestmap中标明安全防护的rest接口,此处使用 /baseUser/json 示例 (配置为ROLE_ADMIN角色可访问)
 
-TIP: 实际场景应该是api的接口地址,是使用GbRestController标注的rest接口
+TIP: 实际场景应该是api的接口地址,是使用FullRestController标注的rest接口
 
 ==== Bearer token 模式
 
@@ -354,7 +286,7 @@ headers 上 增加X-Requested-With ,值为 XMLHttpRequest  <1>
 在postman中选择post至地址 http://localhost:8080/user/json
 authorization 选择 no Auth
 headers 上 增加Content-Type ,值为application/x-www-form-urlencoded
-headers 上 增加X-Requested-With ,值为 XMLHttpRequest  <1>
+headers 上 增加X-Requested-With ,值为 XMLHttpRequest
 body 添加 x-www-form-urlencoded 型,key为access_token, value为上一步获取的access_token
 
 点击Send后,服务器端返回
@@ -365,8 +297,6 @@ body 添加 x-www-form-urlencoded 型,key为access_token, value为上一步获�
      "message": "权限不足."
  }
 ----
-
-<1>  使服务器辨别为ajax访问
 
 === refresh token
 
@@ -486,70 +416,11 @@ responseHandlers.js 文件
   };
 ----
 
-== 额外的认证支持
-
-为支持二维码等非用户名/密码方式的系统验证请求. rest 插件,提供extra 功能模块应对之.
-
-操作步骤如下:
-
-=== 向 /api/login 发送数据
-
-发送的数据不要再包含username和password项 . 包含扩展认证模式需要的信息 ,如 userToken
-
-[source,json]
-----
-{"userToken":"c3TI6pfCaEbK4wrbMBH4esTwJjjYi9xg50.4aGgpjS91dg6su89i"}
-----
-
-=== 在 Startup类中增加回调方法
-
-[source,groovy]
-----
-    // requestMap 参数是系统自动根据发送的json数据组装的Map
-    public String extraAuthenticateUsername(Map requestMap){
-        //根据系统逻辑进行查询, 返回用户名即可
-        return BaseUser.findByUserToken(requestMap.userToken).username
-    }
-----
-
-== 事件订阅
-
-内部安全事件AppSecurityRestAuthSuccessEvent、AppSecurityRestAuthFailureEvent都是安全事件基类AppSecurityEvent的子类。
-
-详细订阅细节可参看link:springSecurity.html[]的事件订阅部分
-
-
-== 启用统一json格式的配置
-
-在application.yml中配置
-
-----
-gb.rest.unifiedJsonResult: true
-----
-
-则所有带有restController或GbRestController注解的类进行json结果定制化。
-
-格式化的类源码如下:
-----
-package org.yunchen.gb.core.config
-public final class UnifiedResult<T> {
-    int status = 200; //根据http status进行改变
-    String errorCode = ""; //默认等同于http status
-    String errorMsg = "";
-    T resultBody;
-    public UnifiedResult() {
-    }
-    public UnifiedResult(T resultBody) {
-        this.resultBody = resultBody;
-    }
-}
-----
-
 == 启动optionsRequest 预检请求
 
 在application.yml中增加optionsRequest项
 ----
-gb:
+base:
     springsecurity:
       rest:
         optionRequest: true
@@ -560,49 +431,9 @@ gb:
 {status:200,errorCode:'',errorMsg:'',resultBody:{}}
 ----
 
-
-== 前后端分离工程的联合发布
-
-可以使用start.declare.org.cn生成前后端分离的项目，项目中自带了联合打包发布的脚本assembleServerAndClient
-
-如果不是从网站创建的多项目工程，可参照如下步骤联合打包发布
-
-<1>. 将vue工程的router地址统一加上前缀/vue ，记得修改页面写的连接地址
-
-<2>. 打包vue client
-
-<3>. 将vue 资源页面，都拷贝到服务端工程的 src/main/resources/public下
-
-<4>. 确认在服务端工程的build.gradle中使用
-
-----
-implementation('org.yunchen.gb:gb-plugin-springsecurity-rest:1.3.1.0')
-----
-
-<5>. 在application.yml中添加如下：
-
-----
-gb:
-    springsecurity:
-    rest:
-        active: true
-            jsSpaCombine: true  #启用vue等js框架打包后合并发布
-            jsPathPrefix:       #js框架的router前缀列表
-            - /vue
-            jsRewritePath: /index.html  #js框架的入口地址
-----
-
-<6>. 服务端的requestmap中增加
-----
-new Requestmap(name: 'index.html', url: '/index.html', configAttribute: "permitAll").save(flush: true);
-----
-
-<7>. 服务器端打包jar
-
-
 == response header 介绍
 
-从1.3.1.1 版本后，增加response header:AuthenticationExceptionName和AuthenticationExceptionInfo (需要用URLDecode获取中文)
+系统在rest认证失败后增加response header:AuthenticationExceptionName和AuthenticationExceptionInfo (需要用URLDecode获取中文)
 
 [format="csv", options="header"]
 |===
@@ -613,3 +444,62 @@ CredentialsExpiredException, 密码过期
 DisabledException, 账户禁用
 LockedException, 账户锁定
 |===
+
+
+[[描述]]
+== 描述
+
+=== yml配置
+
+默认系统已进行的基本安全配置，若希望修改，可参照如下在yml文件中逐一变更
+
+[source,yml]
+----
+base:
+    springsecurity:
+      rest:
+        active: true
+        login:
+          active: true
+          endpointUrl: /api/login
+          usernamePropertyName: username
+          passwordPropertyName: password
+          failureStatusCode: 401  # HttpServletResponse.SC_UNAUTHORIZED
+          useJsonCredentials: true
+          useRequestParamsCredentials: false
+        logout:
+          endpointUrl: /api/logout
+        token:
+          generation:
+            stopSupportRefresh: false
+            useSecureRandom: true
+            useUUID: false
+            jwt:
+              issuer: Spring Security REST Plugin
+              algorithm: HS256
+              jweAlgorithm: RSA-OAEP
+              encryptionMethod: A128GCM
+              userDetaisClaims:                   //从1.3.1版本后支持，下面为增加的字段信息
+                - id:id                           //在jwt 中增加id的项，值为userDetails类的id属性
+                - password:password
+          storage:
+            useJwt: true
+            jwt:
+              useSignedJwt: true
+              useEncryptedJwt: false
+              privateKeyPath: /home/.priavte
+              publicKeyPath: /home/.public
+              secret: gb-atlease256bits(The secret length must be at least 256 bits) #32个字符以上
+              expiration: 3600
+          validation:
+            active: true
+            headerName: X-Auth-Token
+            endpointUrl:  /api/validate
+            tokenHeaderMissingStatusCode: 401   #HttpServletResponse.SC_UNAUTHORIZED
+            enableAnonymousAccess: false
+            useBearerToken: true
+          rendering:
+            usernamePropertyName: username
+            tokenPropertyName: access_token
+            authoritiesPropertyName:  roles
+----

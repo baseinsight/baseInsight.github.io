@@ -454,13 +454,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#使用">使用</a>
 <ul class="sectlevel2">
 <li><a href="#使用gradle-插件">使用gradle 插件</a></li>
-</ul>
-</li>
-<li><a href="#描述">描述</a>
-<ul class="sectlevel2">
-<li><a href="#yml配置">yml配置</a></li>
 <li><a href="#requestmap-设置">Requestmap 设置</a></li>
-<li><a href="#cors-处理">cors 处理</a></li>
 <li><a href="#jwt辅助类">jwt辅助类</a></li>
 </ul>
 </li>
@@ -480,17 +474,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </ul>
 </li>
 <li><a href="#js客户端">js客户端</a></li>
-<li><a href="#额外的认证支持">额外的认证支持</a>
+<li><a href="#启动optionsrequest-预检请求">启动optionsRequest 预检请求</a></li>
+<li><a href="#response-header-介绍">response header 介绍</a></li>
+<li><a href="#描述">描述</a>
 <ul class="sectlevel2">
-<li><a href="#向-apilogin-发送数据">向 /api/login 发送数据</a></li>
-<li><a href="#在-startup类中增加回调方法">在 Startup类中增加回调方法</a></li>
+<li><a href="#yml配置">yml配置</a></li>
 </ul>
 </li>
-<li><a href="#事件订阅">事件订阅</a></li>
-<li><a href="#启用统一json格式的配置">启用统一json格式的配置</a></li>
-<li><a href="#启动optionsrequest-预检请求">启动optionsRequest 预检请求</a></li>
-<li><a href="#前后端分离工程的联合发布">前后端分离工程的联合发布</a></li>
-<li><a href="#response-header-介绍">response header 介绍</a></li>
 </ul>
 </div>
 </div>
@@ -504,10 +494,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p>默认提供基于api的login,logout,validate等认证功能,oauth的refresh token功能,
 但因为默认的jwt引擎是stateless,服务器并未存储token,因此并提供logout功能.
-可在springsecurity-rest-gorm , springsecurity-rest-redis等插件中使用logout功能.</p>
+可在springsecurity-rest-db , springsecurity-rest-redis等插件中使用logout功能.</p>
 </div>
 <div class="paragraph">
-<p>本插件可以与 GbRestController注解一起使用.</p>
+<p>本插件可以与 FullRestController注解一起使用.</p>
 </div>
 </div>
 </div>
@@ -540,72 +530,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="描述">描述</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="yml配置">yml配置</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-yml" data-lang="yml">gb:
-    rest:
-      prefix: /api
-      unifiedJsonResult: true
-    springsecurity:
-      rest:
-        active: true
-        jsSpaCombine: true  #启用vue等js框架打包后合并发布
-        jsPathPrefix:       #js框架的router前缀列表
-          - /vue
-        jsRewritePath: /index.html  #js框架的入口地址
-        login:
-          active: true
-          endpointUrl: /api/login
-          usernamePropertyName: username
-          passwordPropertyName: password
-          failureStatusCode: 401  # HttpServletResponse.SC_UNAUTHORIZED
-          useJsonCredentials: true
-          useRequestParamsCredentials: false
-        logout:
-          endpointUrl: /api/logout
-        token:
-          generation:
-            stopSupportRefresh: false
-            useSecureRandom: true
-            useUUID: false
-            jwt:
-              issuer: Spring Security REST Plugin
-              algorithm: HS256
-              jweAlgorithm: RSA-OAEP
-              encryptionMethod: A128GCM
-              userDetaisClaims:                   //从1.3.1版本后支持，下面为增加的字段信息
-                - id:id                           //在jwt 中增加id的项，值为userDetails类的id属性
-                - password:password
-          storage:
-            useJwt: true
-            jwt:
-              useSignedJwt: true
-              useEncryptedJwt: false
-              privateKeyPath: /home/.priavte
-              publicKeyPath: /home/.public
-              secret: gb-atlease256bits(The secret length must be at least 256 bits) #32个字符以上
-              expiration: 3600
-          validation:
-            active: true
-            headerName: X-Auth-Token
-            endpointUrl:  /api/validate
-            tokenHeaderMissingStatusCode: 401   #HttpServletResponse.SC_UNAUTHORIZED
-            enableAnonymousAccess: false
-            useBearerToken: true
-          rendering:
-            usernamePropertyName: username
-            tokenPropertyName: access_token
-            authoritiesPropertyName:  roles</code></pre>
-</div>
-</div>
-</div>
 <div class="sect2">
 <h3 id="requestmap-设置">Requestmap 设置</h3>
 <div class="paragraph">
@@ -615,18 +539,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="highlight"><code class="language-yml" data-lang="yml">            ......
             new Requestmap(name:'oauth管理',url: '/oauth/**', configAttribute: "permitAll").save(flush: true);
-            ......
-            new Requestmap(name:'/**管理',url: '/**', configAttribute: 'isFullyAuthenticated()').save(flush: true);</code></pre>
+            ......</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>到此设置完成.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="cors-处理">cors 处理</h3>
-<div class="paragraph">
-<p>参见spring security 插件中的 <a href="springSecurity.html#_启用cors的处理">cors 设置描述</a></p>
 </div>
 </div>
 <div class="sect2">
@@ -841,8 +758,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>implementation('org.yunchen.gb:gb-plugin-springsecurity:1.3.1.0')
-implementation('org.yunchen.gb:gb-plugin-springsecurity-rest:1.3.1.0')</pre>
+<pre>    implementation('io.github.baseinsight:plugin-springsecurity-starter:x.x.x-SNAPSHOT')
+    implementation('io.github.baseinsight:plugin-springsecurity-rest-starter:x.x.x-SNAPSHOT')</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -850,7 +767,7 @@ implementation('org.yunchen.gb:gb-plugin-springsecurity-rest:1.3.1.0')</pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>gb:
+<pre>base:
     springsecurity:
         headers:
           - {Access-Control-Expose-Headers: WWW-Authenticate,Authorization,Set-Cookie,X-Frame-Options} <i class="conum" data-value="1"></i><b>(1)</b>
@@ -957,7 +874,7 @@ Content-Type: application/json
 <div class="sect2">
 <h3 id="登录">登录</h3>
 <div class="paragraph">
-<p>登录功能的地址配置在application.yml中gb.springsecurity.rest.login.endpointUrl,默认是/api/login ,可视项目情况修改为其他路径</p>
+<p>登录功能的地址配置在application.yml中base.springsecurity.rest.login.endpointUrl,默认是/api/login ,可视项目情况修改为其他路径</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1001,7 +918,7 @@ body 添加 raw 型值 {"username":"user","password":"user"}
 <div class="sect2">
 <h3 id="访问安全防护的接口">访问安全防护的接口</h3>
 <div class="paragraph">
-<p>现在我们使用token访问在requestmap中标明安全防护的rest接口,此处使用 /user/json 示例 (配置为ROLE_ADMIN角色可访问)</p>
+<p>现在我们使用token访问在requestmap中标明安全防护的rest接口,此处使用 /baseUser/json 示例 (配置为ROLE_ADMIN角色可访问)</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -1010,7 +927,7 @@ body 添加 raw 型值 {"username":"user","password":"user"}
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-实际场景应该是api的接口地址,是使用GbRestController标注的rest接口
+实际场景应该是api的接口地址,是使用FullRestController标注的rest接口
 </td>
 </tr>
 </table>
@@ -1047,7 +964,7 @@ headers 上 增加X-Requested-With ,值为 XMLHttpRequest  <i class="conum" data
 <pre class="highlight"><code class="language-json" data-lang="json">在postman中选择post至地址 http://localhost:8080/user/json
 authorization 选择 no Auth
 headers 上 增加Content-Type ,值为application/x-www-form-urlencoded
-headers 上 增加X-Requested-With ,值为 XMLHttpRequest  <i class="conum" data-value="1"></i><b>(1)</b>
+headers 上 增加X-Requested-With ,值为 XMLHttpRequest
 body 添加 x-www-form-urlencoded 型,key为access_token, value为上一步获取的access_token
 
 点击Send后,服务器端返回
@@ -1058,14 +975,6 @@ body 添加 x-www-form-urlencoded 型,key为access_token, value为上一步获�
      "message": "权限不足."
  }</code></pre>
 </div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>使服务器辨别为ajax访问</td>
-</tr>
-</table>
 </div>
 </div>
 </div>
@@ -1208,86 +1117,6 @@ key为refresh_token, value为第一步获取的refresh_token
 </div>
 </div>
 <div class="sect1">
-<h2 id="额外的认证支持">额外的认证支持</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>为支持二维码等非用户名/密码方式的系统验证请求. rest 插件,提供extra 功能模块应对之.</p>
-</div>
-<div class="paragraph">
-<p>操作步骤如下:</p>
-</div>
-<div class="sect2">
-<h3 id="向-apilogin-发送数据">向 /api/login 发送数据</h3>
-<div class="paragraph">
-<p>发送的数据不要再包含username和password项 . 包含扩展认证模式需要的信息 ,如 userToken</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{"userToken":"c3TI6pfCaEbK4wrbMBH4esTwJjjYi9xg50.4aGgpjS91dg6su89i"}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="在-startup类中增加回调方法">在 Startup类中增加回调方法</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">    // requestMap 参数是系统自动根据发送的json数据组装的Map
-    public String extraAuthenticateUsername(Map requestMap){
-        //根据系统逻辑进行查询, 返回用户名即可
-        return BaseUser.findByUserToken(requestMap.userToken).username
-    }</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="事件订阅">事件订阅</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>内部安全事件AppSecurityRestAuthSuccessEvent、AppSecurityRestAuthFailureEvent都是安全事件基类AppSecurityEvent的子类。</p>
-</div>
-<div class="paragraph">
-<p>详细订阅细节可参看<a href="springSecurity.html" class="bare">springSecurity.html</a>的事件订阅部分</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="启用统一json格式的配置">启用统一json格式的配置</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>在application.yml中配置</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>gb.rest.unifiedJsonResult: true</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>则所有带有restController或GbRestController注解的类进行json结果定制化。</p>
-</div>
-<div class="paragraph">
-<p>格式化的类源码如下:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>package org.yunchen.gb.core.config
-public final class UnifiedResult&lt;T&gt; {
-    int status = 200; //根据http status进行改变
-    String errorCode = ""; //默认等同于http status
-    String errorMsg = "";
-    T resultBody;
-    public UnifiedResult() {
-    }
-    public UnifiedResult(T resultBody) {
-        this.resultBody = resultBody;
-    }
-}</pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="启动optionsrequest-预检请求">启动optionsRequest 预检请求</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -1295,7 +1124,7 @@ public final class UnifiedResult&lt;T&gt; {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>gb:
+<pre>base:
     springsecurity:
       rest:
         optionRequest: true</pre>
@@ -1312,64 +1141,10 @@ public final class UnifiedResult&lt;T&gt; {
 </div>
 </div>
 <div class="sect1">
-<h2 id="前后端分离工程的联合发布">前后端分离工程的联合发布</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>可以使用start.declare.org.cn生成前后端分离的项目，项目中自带了联合打包发布的脚本assembleServerAndClient</p>
-</div>
-<div class="paragraph">
-<p>如果不是从网站创建的多项目工程，可参照如下步骤联合打包发布</p>
-</div>
-<div class="paragraph">
-<p>&lt;1&gt;. 将vue工程的router地址统一加上前缀/vue ，记得修改页面写的连接地址</p>
-</div>
-<div class="paragraph">
-<p>&lt;2&gt;. 打包vue client</p>
-</div>
-<div class="paragraph">
-<p>&lt;3&gt;. 将vue 资源页面，都拷贝到服务端工程的 src/main/resources/public下</p>
-</div>
-<div class="paragraph">
-<p>&lt;4&gt;. 确认在服务端工程的build.gradle中使用</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>implementation('org.yunchen.gb:gb-plugin-springsecurity-rest:1.3.1.0')</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>&lt;5&gt;. 在application.yml中添加如下：</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>gb:
-    springsecurity:
-    rest:
-        active: true
-            jsSpaCombine: true  #启用vue等js框架打包后合并发布
-            jsPathPrefix:       #js框架的router前缀列表
-            - /vue
-            jsRewritePath: /index.html  #js框架的入口地址</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>&lt;6&gt;. 服务端的requestmap中增加</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>new Requestmap(name: 'index.html', url: '/index.html', configAttribute: "permitAll").save(flush: true);</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>&lt;7&gt;. 服务器端打包jar</p>
-</div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="response-header-介绍">response header 介绍</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>从1.3.1.1 版本后，增加response header:AuthenticationExceptionName和AuthenticationExceptionInfo (需要用URLDecode获取中文)</p>
+<p>系统在rest认证失败后增加response header:AuthenticationExceptionName和AuthenticationExceptionInfo (需要用URLDecode获取中文)</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1407,11 +1182,73 @@ public final class UnifiedResult&lt;T&gt; {
 </table>
 </div>
 </div>
+<div class="sect1">
+<h2 id="描述">描述</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="yml配置">yml配置</h3>
+<div class="paragraph">
+<p>默认系统已进行的基本安全配置，若希望修改，可参照如下在yml文件中逐一变更</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-yml" data-lang="yml">base:
+    springsecurity:
+      rest:
+        active: true
+        login:
+          active: true
+          endpointUrl: /api/login
+          usernamePropertyName: username
+          passwordPropertyName: password
+          failureStatusCode: 401  # HttpServletResponse.SC_UNAUTHORIZED
+          useJsonCredentials: true
+          useRequestParamsCredentials: false
+        logout:
+          endpointUrl: /api/logout
+        token:
+          generation:
+            stopSupportRefresh: false
+            useSecureRandom: true
+            useUUID: false
+            jwt:
+              issuer: Spring Security REST Plugin
+              algorithm: HS256
+              jweAlgorithm: RSA-OAEP
+              encryptionMethod: A128GCM
+              userDetaisClaims:                   //从1.3.1版本后支持，下面为增加的字段信息
+                - id:id                           //在jwt 中增加id的项，值为userDetails类的id属性
+                - password:password
+          storage:
+            useJwt: true
+            jwt:
+              useSignedJwt: true
+              useEncryptedJwt: false
+              privateKeyPath: /home/.priavte
+              publicKeyPath: /home/.public
+              secret: gb-atlease256bits(The secret length must be at least 256 bits) #32个字符以上
+              expiration: 3600
+          validation:
+            active: true
+            headerName: X-Auth-Token
+            endpointUrl:  /api/validate
+            tokenHeaderMissingStatusCode: 401   #HttpServletResponse.SC_UNAUTHORIZED
+            enableAnonymousAccess: false
+            useBearerToken: true
+          rendering:
+            usernamePropertyName: username
+            tokenPropertyName: access_token
+            authoritiesPropertyName:  roles</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0-SNAPSHOT<br>
-Last updated 2023-07-10 23:04:16 +0800
+Last updated 2023-07-11 15:48:55 +0800
 </div>
 </div>
 </body>
