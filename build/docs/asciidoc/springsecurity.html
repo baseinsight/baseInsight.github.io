@@ -478,7 +478,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#jwt方案">JWT方案</a></li>
 </ul>
 </li>
-<li><a href="#可修改配置">可修改配置</a></li>
+<li><a href="#可修改配置">可修改配置</a>
+<ul class="sectlevel2">
+<li><a href="#使用redis存储requestmap">使用redis存储requestmap</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -978,13 +982,49 @@ base:
         expiredUrl: /login/concurrentSession</code></pre>
 </div>
 </div>
+<div class="sect2">
+<h3 id="使用redis存储requestmap">使用redis存储requestmap</h3>
+<div class="sect3">
+<h4 id="添加项目的radis插件">添加项目的radis插件</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">    implementation('io.github.baseinsight:plugin-redis-starter:0.0.7-SNAPSHOT')</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="增加yml文件配置启用此功能">增加yml文件配置,启用此功能</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-yml" data-lang="yml">base.springsecurity.requestmapGatherToRedis: true;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="每次用户访问系统会自动从redis-server下载requestmap的服务器配置">每次用户访问，系统会自动从redis server下载requestmap的服务器配置</h4>
+
+</div>
+<div class="sect3">
+<h4 id="默认增加的redis项">默认增加的redis项</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>键值：base:spring:security:compiledJson</p>
+</li>
+<li>
+<p>键值：base:spring:security:compiledJsonMd5</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0-SNAPSHOT<br>
-Last updated 2023-07-11 16:45:44 +0800
+Last updated 2023-07-12 22:48:43 +0800
 </div>
 </div>
 </body>

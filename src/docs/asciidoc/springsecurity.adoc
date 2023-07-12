@@ -371,3 +371,27 @@ base:
         maxSessionsPreventsLogin: false  #// true 为后登陆用户异常，false 为先登陆用户被踢出
         expiredUrl: /login/concurrentSession
 ----
+
+
+=== 使用redis存储requestmap
+
+==== 添加项目的radis插件
+
+[source,groovy]
+----
+    implementation('io.github.baseinsight:plugin-redis-starter:0.0.7-SNAPSHOT')
+----
+
+==== 增加yml文件配置,启用此功能
+
+[source,yml]
+----
+base.springsecurity.requestmapGatherToRedis: true;
+----
+
+==== 每次用户访问，系统会自动从redis server下载requestmap的服务器配置
+
+==== 默认增加的redis项
+
+1. 键值：base:spring:security:compiledJson
+2. 键值：base:spring:security:compiledJsonMd5
