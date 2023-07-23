@@ -20,7 +20,7 @@
 
 == 版本历史
 
-*  0.0.7-SNAPSHOT
+*  0.2.1
 
 [[使用]]
 == 使用
@@ -31,7 +31,7 @@
 gradle中
 [source,groovy]
 ----
-    implementation('io.github.baseinsight:plugin-springsecurity-rest-starter:x.x.x-SNAPSHOT')
+    implementation('io.github.baseinsight:plugin-springsecurity-rest-starter:x.x.x')
 ----
 
 

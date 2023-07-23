@@ -24,6 +24,15 @@ CI/CD,jenkins,
 配置文件类型,*.yml,
 |===
 
+== 制品库及引用方式
+
+[format="csv", options="header"]
+|===
+分类,方法,说明
+repository,    maven { url "https://s01.oss.sonatype.org/content/repositories/releases/" },
+引用方式,    implementation('io.github.baseinsight:core-starter:0.2.1'),gradle
+|===
+
 == 基本组件
 
 [format="csv", options="header"]
@@ -39,3 +48,6 @@ redis组件,link:redis.html[plugin-redis-starter],
 安全camunda插件,link:springsecurity-camunda.html[plugin-springsecurity-camunda-starter],
 安全websocket插件,link:springsecurity-websocket.html[plugin-springsecurity-websocket-starter],
 |===
+
+== 开发经验
+//JPA

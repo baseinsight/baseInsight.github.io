@@ -12,17 +12,18 @@
 
 [[版本]]
 
-*  0.0.6-SNAPSHOT
+*  0.2.1
 
 [[使用]]
 == 使用
 gradle中
 [source,gradle]
 ----
-    implementation('io.github.baseinsight:core-starter:x.x.x-SNAPSHOT')
+    implementation('io.github.baseinsight:core-starter:x.x.x')
 ----
 
-TIP: 需要添加repositories:      maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
+TIP: 需要添加repositories:
+maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
 
 
 [[描述]]

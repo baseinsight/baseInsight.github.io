@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
 <meta name="author" content="作者：肖鹏 &lt;13910818313@163.com&gt;">
-<title>Spring Security REST REDIS 插件</title>
+<title>qrcode 插件使用</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -441,7 +441,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Spring Security REST REDIS 插件</h1>
+<h1>qrcode 插件使用</h1>
 <div class="details">
 <span id="author" class="author">作者：肖鹏 &lt;13910818313@163.com&gt;</span><br>
 <span id="revnumber">version 1.0.0-SNAPSHOT</span>
@@ -450,11 +450,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#介绍">介绍</a></li>
-<li><a href="#版本历史">版本历史</a></li>
-<li><a href="#使用">使用</a>
+<li><a href="#使用">使用</a></li>
+<li><a href="#访问方式">访问方式</a>
 <ul class="sectlevel2">
-<li><a href="#使用gradle-插件">使用gradle 插件</a></li>
-<li><a href="#修改yml配置">修改yml配置</a></li>
+<li><a href="#controller">controller</a></li>
+<li><a href="#service方式">service方式</a></li>
 </ul>
 </li>
 </ul>
@@ -465,120 +465,45 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="介绍">介绍</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>扩展的spring security rest 功能, 提供将token 存储进REDIS,同时提供了logout功能。
-默认启用SecureRandomTokenGenerator生成token,不支持refresh_token操作.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="版本历史">版本历史</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>0.2.1</p>
-</li>
-</ul>
+<p>集成zxing,提供qrcode在线生成工具</p>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="使用">使用</h2>
 <div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">    implementation('io.github.baseinsight:plugin-qrcode-starter:x.x.x')</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="访问方式">访问方式</h2>
+<div class="sectionbody">
 <div class="sect2">
-<h3 id="使用gradle-插件">使用gradle 插件</h3>
-<div class="sect3">
-<h4 id="添加插件">添加插件</h4>
+<h3 id="controller">controller</h3>
 <div class="paragraph">
-<p>gradle中</p>
+<p>访问/qrcode/index,参数为url或text(post或get 方式访问都可以)</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">    implementation('io.github.baseinsight:plugin-springsecurity-rest-redis-starter:x.x.x')</code></pre>
+<div class="paragraph">
+<p>例如 <a href="http://localhost:8080/qrcode/index?text=测试" class="bare">http://localhost:8080/qrcode/index?text=测试</a></p>
 </div>
+<div class="paragraph">
+<p>访问/qrcode/url,参数为u或id</p>
 </div>
+<div class="paragraph">
+<p>访问/qrcode/text,参数为text或id</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="修改yml配置">修改yml配置</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-yml" data-lang="yml">base:
-    springsecurity:
-      rest:
-        active: true
-        login:
-          active: true
-          endpointUrl: /api/login
-          usernamePropertyName: username
-          passwordPropertyName: password
-          failureStatusCode: 401  # HttpServletResponse.SC_UNAUTHORIZED
-          useJsonCredentials: true
-          useRequestParamsCredentials: false
-        logout:
-          endpointUrl: /api/logout
-        token:
-          generation:
-            useSecureRandom: true
-            useUUID: false
-            jwt:
-              issuer: Spring Security REST Plugin
-              algorithm: HS256
-              jweAlgorithm: RSA-OAEP
-              encryptionMethod: A128GCM
-          storage:
-            useJwt: false                        <i class="conum" data-value="1"></i><b>(1)</b>
-            useDb: false                  <i class="conum" data-value="2"></i><b>(2)</b>
-            useRedis:true             <i class="conum" data-value="3"></i><b>(3)</b>
-            expiration: 3600           <i class="conum" data-value="4"></i><b>(4)</b>
-            jwt:
-              useSignedJwt: false              <i class="conum" data-value="5"></i><b>(5)</b>
-              useEncryptedJwt: false           <i class="conum" data-value="6"></i><b>(6)</b>
-              privateKeyPath: /home/.priavte/
-              publicKeyPath: /home/.public
-              secret: atlease256bits(The secret length must be at least 256 bits)
-              expiration: 3600</code></pre>
+<h3 id="service方式">service方式</h3>
+<div class="paragraph">
+<p>在应用中注入QrcodeService, 调用其renderPng方法</p>
 </div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>关闭jwt</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>关闭数据库存储</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>启用redis存储</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>设置key的过期时间</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>关闭jwt签名</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="6"></i><b>6</b></td>
-<td>关闭jwt加密</td>
-</tr>
-</table>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-可在yml中只添加如上8行数据，其他的若不修改默认值可不添加至yml文件中
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>renderPng(HttpServletResponse response, String data, int size)</p>
 </div>
 </div>
 </div>
@@ -587,7 +512,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0-SNAPSHOT<br>
-Last updated 2023-07-23 09:23:28 +0800
+Last updated 2023-07-23 09:20:46 +0800
 </div>
 </div>
 </body>

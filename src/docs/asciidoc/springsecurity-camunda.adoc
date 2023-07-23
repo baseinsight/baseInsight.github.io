@@ -15,7 +15,7 @@
 
 == 版本历史
 
-*  0.0.7-SNAPSHOT
+*  0.2.1
 
 [[使用]]
 == 使用
@@ -26,7 +26,7 @@
 gradle中
 [source,groovy]
 ----
-    implementation('io.github.baseinsight:plugin-springsecurity-camunda-starter:x.x.x-SNAPSHOT')
+    implementation('io.github.baseinsight:plugin-springsecurity-camunda-starter:x.x.x')
 ----
 
 === 编写基础工作流安全回调类
